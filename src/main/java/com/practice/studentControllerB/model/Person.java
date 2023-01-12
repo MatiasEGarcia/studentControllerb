@@ -15,7 +15,7 @@ public class Person {
 
 	private long id;
 	private String name;
-	private String apellido;
-	private String correo;
-	private byte edad;
+	private String lastname;
+	private String email;
+	private byte age;
 }
