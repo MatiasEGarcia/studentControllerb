@@ -8,7 +8,7 @@ public interface GenericDao<T> {
 	
 	int create(T t);
 	
-	T getById();
+	T getById(Long id);
 	
 	int update(T t);
 	
