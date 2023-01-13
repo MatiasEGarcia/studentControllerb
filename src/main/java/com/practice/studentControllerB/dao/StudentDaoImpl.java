@@ -45,26 +45,34 @@ public class StudentDaoImpl implements StudentDao {
 
 	@Override
 	public int update(Student t) {
-		// TODO Auto-generated method stub
-		return 0;
+		String sql = "UPDATE students SET name = ?, lastname = ?, email = ?, age = ?, admission_date = ?, favorite_language = ? WHERE id = ?";
+		Object[] args = {t.getName(), t.getLastname(), t.getEmail(), t.getAge(), t.getAddmissionDate().getTime(), t.getFavoriteLanguage(),t.getId()};
+		return jdbc.update(sql,args);
 	}
 
 	@Override
 	public int delete(Long id) {
-		// TODO Auto-generated method stub
-		return 0;
+		String sql = "DELETE FROM students WHERE id = ?";
+		return jdbc.update(sql, id);
 	}
 
 	@Override
 	public Student getByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		Student student;
+		String sql = "SELECT * FROM students WHERE email = ?";
+		try {
+			student = jdbc.queryForObject(sql, new StudentRowMapper(),email);
+		} catch (EmptyResultDataAccessException e) {
+			return null;
+		}
+		
+		return student;
 	}
 
 	@Override
-	public List<Student> favoriteLanguage(String string) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Student> favoriteLanguage(String favoriteLanguage) {
+		String sql = "SELECT * FROM students WHERE favorite_language = ?";
+		return jdbc.query(sql, new StudentResultSetExtractor(),favoriteLanguage);
 	}
 
 }

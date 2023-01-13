@@ -3,8 +3,6 @@ package com.practice.studentControllerB.dao;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.Calendar;
 
@@ -14,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 
@@ -50,7 +47,7 @@ class StudentDaoImplTest {
 		student = new Student();
 		Calendar calendar = Calendar.getInstance();
 		byte age = 20;
-		student.setId(2L);
+		student.setId(1L);
 		student.setName("Franco");
 		student.setLastname("Castaña");
 		student.setEmail("francoCast@gmail.com");
@@ -83,6 +80,48 @@ class StudentDaoImplTest {
 	@Test
 	void getByIdExistReturnStudent() {
 		assertNotNull(dao.getById(1L));
+	}
+	
+	@Test
+	void updateReturn1() {
+		assertEquals(1,dao.update(student));
+	}
+	
+	@Test
+	void updateWihtIdNoExistReturn0() {
+		student.setId(100L);
+		assertEquals(0,dao.update(student));
+	}
+	
+	@Test
+	void deleteReturn1() {
+		assertEquals(1, dao.delete(student.getId()));
+	}
+	
+	@Test
+	void deleteWithIdNoExistReturn0(){
+		student.setId(100L);
+		assertEquals(0 , dao.delete(student.getId()));
+	}
+	
+	@Test
+	void getByEmailExistReturnNotNull() {
+		assertNotNull(dao.getByEmail("mati@gmail.com")); //this email is in the application_test
+	}
+	
+	@Test
+	void getByEmailNoExistReturnNull() {
+		assertNull(dao.getByEmail("m@gmail.com"));
+	}
+	
+	@Test
+	void getByFavoriteLanguageNotNull() {
+		assertNotNull(dao.favoriteLanguage("Chinese")); //this is in the application_test
+	}
+	
+	@Test
+	void getByFavoriteLanguageNull() {
+		assertNull(dao.favoriteLanguage("German"));
 	}
 	
 	@AfterEach
