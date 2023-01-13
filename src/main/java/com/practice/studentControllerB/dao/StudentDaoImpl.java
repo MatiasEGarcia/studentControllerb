@@ -70,7 +70,7 @@ public class StudentDaoImpl implements StudentDao {
 	}
 
 	@Override
-	public List<Student> favoriteLanguage(String favoriteLanguage) {
+	public List<Student> getByfavoriteLanguage(String favoriteLanguage) {
 		String sql = "SELECT * FROM students WHERE favorite_language = ?";
 		return jdbc.query(sql, new StudentResultSetExtractor(),favoriteLanguage);
 	}

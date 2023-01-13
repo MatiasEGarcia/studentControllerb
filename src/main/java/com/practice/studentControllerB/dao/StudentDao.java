@@ -8,5 +8,5 @@ public interface StudentDao extends GenericDao<Student>{
 
 	Student getByEmail(String email);
 	
-	List<Student> favoriteLanguage(String string);
+	List<Student> getByfavoriteLanguage(String string);
 }

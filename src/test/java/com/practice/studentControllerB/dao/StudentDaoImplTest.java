@@ -116,12 +116,12 @@ class StudentDaoImplTest {
 	
 	@Test
 	void getByFavoriteLanguageNotNull() {
-		assertNotNull(dao.favoriteLanguage("Chinese")); //this is in the application_test
+		assertNotNull(dao.getByfavoriteLanguage("Chinese")); //this is in the application_test
 	}
 	
 	@Test
 	void getByFavoriteLanguageNull() {
-		assertNull(dao.favoriteLanguage("German"));
+		assertNull(dao.getByfavoriteLanguage("German"));
 	}
 	
 	@AfterEach

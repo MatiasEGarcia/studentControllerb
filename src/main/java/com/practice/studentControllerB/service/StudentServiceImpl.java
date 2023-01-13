@@ -26,14 +26,15 @@ public class StudentServiceImpl implements StudentService{
 	@Value("${e.student.email.already.used}")
 	private String studentEmailAlreadyUsed;
 	
+	@Value("${e.student.id.not.found}")
+	private String studentIdNotFound;
+	
 	@Override
 	@Transactional(readOnly = true)
 	public List<Student> getAll() {
 		List<Student> students = studentDao.getAll();
-		if(students == null) {
-			return Collections.emptyList();
-		}
-		return Collections.unmodifiableList(students);
+		if(students != null) return Collections.unmodifiableList(students);
+		return students; //can return null list
 	}
 
 	@Override
@@ -46,34 +47,32 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	@Transactional(readOnly = true)
 	public Student getById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		return studentDao.getById(id);
 	}
 
 	@Override
-	public int update(Student t) {
-		// TODO Auto-generated method stub
-		return 0;
+	public int update(Student student) {
+		if(student == null) throw new IllegalArgumentException(studentNotNull);
+		if(studentDao.getById(student.getId()) == null) throw new IllegalArgumentException(studentIdNotFound);
+		return studentDao.update(student);
 	}
 
 	@Override
 	public int delete(Long id) {
-		// TODO Auto-generated method stub
-		return 0;
+		if(studentDao.getById(id) == null) throw new IllegalArgumentException(studentIdNotFound);
+		return studentDao.delete(id);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Student getByEmail(String email) {
-		// TODO Auto-generated method stub
-		return null;
+		return studentDao.getByEmail(email);
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Student> favoriteLanguage(String string) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Student> favoriteLanguage(String language) {
+		return studentDao.getByfavoriteLanguage(language);
 	}
 
 }
