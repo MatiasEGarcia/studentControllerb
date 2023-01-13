@@ -1,5 +1,7 @@
 package com.practice.studentControllerB.dao;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.AfterEach;
@@ -37,12 +39,18 @@ class StudentDaoImplTest {
 	void setUpDatabase() {
 		jdbc.update(sqlAddStudent);
 	}
+
+	@Test
+	void getAllReturnNull() {
+		jdbc.update("DELETE FROM students");
+		assertNull(dao.getAll());
+	}
 	
 	@Test
-	void getByEmailReturnNull() {
-		fail();
+	void getAllReturnNotNull() {
+		assertNotNull(dao.getAll());
 	}
-
+	
 	
 	@AfterEach
 	void setUpAfterTransaction() {

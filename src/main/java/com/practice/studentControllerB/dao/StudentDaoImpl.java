@@ -2,17 +2,23 @@ package com.practice.studentControllerB.dao;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.practice.studentControllerB.dao.de.StudentResultSetExtractor;
 import com.practice.studentControllerB.model.Student;
 
 @Repository
 public class StudentDaoImpl implements StudentDao {
 
+	@Autowired
+	private JdbcTemplate jdbc;
+	
 	@Override
 	public List<Student> getAll() {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT * FROM students";
+		return jdbc.query(sql, new StudentResultSetExtractor());
 	}
 
 	@Override

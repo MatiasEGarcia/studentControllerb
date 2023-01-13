@@ -1,6 +1,6 @@
 package com.practice.studentControllerB.model;
 
-import java.time.LocalDateTime;
+import java.util.Calendar;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,6 +17,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Student extends Person{
 
-	private LocalDateTime  addmissionDate;
+	private Calendar  addmissionDate;
 	private String favoriteLanguage;
 }
