@@ -67,4 +67,16 @@ public class TeacherDaoImpl implements TeacherDao{
 		return jdbc.query(sql, new TeacherResultSetExtractor(),nationality);
 	}
 
+	@Override
+	public Teacher getByEmail(String email) {
+		Teacher teacher;
+		String sql = "SELECT * FROM teachers WHERE email = ?";
+		try {
+			teacher = jdbc.queryForObject(sql, new TeacherRowMapper(),email);
+		}catch(EmptyResultDataAccessException e) {
+			return null;
+		}
+		return teacher;
+	}
+
 }

@@ -118,9 +118,18 @@ class TeacherDaoImplTest {
 	}
 	@Test
 	void getByNationalityReturnNotNull() {
-		assertNotNull(dao.getByNationality("Chinese"));
+		assertNotNull(dao.getByNationality("Chinese")); //in the database there is a teacher with this nationality, see in line .45
 	}
 	
+	@Test
+	void getByEmailNoExistReturnNull() {
+		assertNull(dao.getByEmail(teacher.getEmail()));
+	}
+	
+	@Test
+	void getByEmailExistReturnNotNull() {
+		assertNotNull(dao.getByEmail("xiaoM@gmail.com"));//in the database there is a teacher with this email, see in line .45
+	}
 	@AfterEach
 	void setUpAfterTransaction() {
 		jdbc.execute(sqlRefIntegrityFalse);
