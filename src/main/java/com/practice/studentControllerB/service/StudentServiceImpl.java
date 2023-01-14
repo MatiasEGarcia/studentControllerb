@@ -13,7 +13,7 @@ import com.practice.studentControllerB.model.Student;
 
 import lombok.RequiredArgsConstructor;
 
-@PropertySource("/exception-messages.properties")
+@PropertySource("classpath:application-messages.properties")
 @RequiredArgsConstructor
 @Service
 public class StudentServiceImpl implements StudentService{
