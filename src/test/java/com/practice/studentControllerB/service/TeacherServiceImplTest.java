@@ -1,6 +1,7 @@
 package com.practice.studentControllerB.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
@@ -63,23 +64,108 @@ class TeacherServiceImplTest {
 		verify(teacherDao,never()).create(null);
 	}
 
+	@Test
+	void createEmailAlreayUsed() {
+		when(teacherDao.getByEmail(teacher.getEmail())).thenReturn(teacher);
+		assertThrows(IllegalArgumentException.class, () -> {teacherService.create(teacher);});
+		verify(teacherDao).getByEmail(teacher.getEmail());
+		verify(teacherDao,never()).create(teacher);
+	}
 	
+	@Test
+	void createReturn1() {
+		when(teacherDao.getByEmail(teacher.getEmail())).thenReturn(null);
+		when(teacherDao.create(teacher)).thenReturn(1);
+		assertEquals(1, teacherService.create(teacher));
+		
+		verify(teacherDao).getByEmail(teacher.getEmail());
+		verify(teacherDao).create(teacher);
+	}
 	
+	@Test
+	void getByIdReturnNull() {
+		assertNull(teacherService.getById(teacher.getId()));
+		verify(teacherDao).getById(teacher.getId());
+	}
 	
+	@Test
+	void getByIdReturnNotNull() {
+		when(teacherDao.getById(teacher.getId())).thenReturn(teacher);
+		assertNotNull(teacherService.getById(teacher.getId()));
+		verify(teacherDao).getById(teacher.getId());
+	}
 	
+	@Test
+	void updateArgumentNull() {
+		assertThrows(IllegalArgumentException.class, () -> {teacherService.update(null);});
+		verify(teacherDao,never()).update(null);
+	}
 	
+	@Test
+	void updateTeacherWithIdNoExist() {
+		when(teacherDao.getById(teacher.getId())).thenReturn(null);
+		assertThrows(IllegalArgumentException.class, () -> {teacherService.update(teacher);});
+		verify(teacherDao).getById(teacher.getId());
+		verify(teacherDao,never()).update(teacher);
+	}
 	
+	@Test
+	void updateReturn1() {
+		when(teacherDao.getById(teacher.getId())).thenReturn(teacher);
+		when(teacherDao.update(teacher)).thenReturn(1);
+		assertEquals(1, teacherService.update(teacher));
+		verify(teacherDao).getById(teacher.getId());
+		verify(teacherDao).update(teacher);
+	}
 	
+	@Test
+	void deleteTeacherNoExist() {
+		when(teacherDao.getById(teacher.getId())).thenReturn(null);
+		assertThrows(IllegalArgumentException.class, () -> {teacherService.delete(teacher.getId());});
+		verify(teacherDao).getById(teacher.getId());
+		verify(teacherDao,never()).delete(teacher.getId());
+	}
 	
+	@Test
+	void deleteTeacherReturn1() {
+		when(teacherDao.getById(teacher.getId())).thenReturn(teacher);
+		when(teacherDao.delete(teacher.getId())).thenReturn(1);
+		assertEquals(1, teacherService.delete(teacher.getId()));
+		verify(teacherDao).getById(teacher.getId());
+		verify(teacherDao).delete(teacher.getId());
+	}
 	
+	@Test
+	void getByQualificationReturnNull() {
+		when(teacherDao.getByQualification(QualificationE.UNIVERSITARY.toString())).thenReturn(null);
+		assertNull(teacherService.getByQualification(QualificationE.UNIVERSITARY.toString()));
+		verify(teacherDao).getByQualification(QualificationE.UNIVERSITARY.toString());
+	}
 	
+	@Test
+	void getByQualificationReturnNotNull() {
+		List<Teacher> teachers = new ArrayList<>();
+		teachers.add(teacher);
+		when(teacherDao.getByQualification(QualificationE.UNIVERSITARY.toString())).thenReturn(teachers);
+		assertNotNull(teacherService.getByQualification(QualificationE.UNIVERSITARY.toString()));
+		verify(teacherDao).getByQualification(QualificationE.UNIVERSITARY.toString());
+	}
 	
+	@Test
+	void getByNationalityReturnNull() {
+		when(teacherDao.getByNationality("Chinese")).thenReturn(null);
+		assertNull(teacherService.getByNationality("Chinese"));
+		verify(teacherDao).getByNationality("Chinese");
+	}
 	
-	
-	
-	
-	
-	
+	@Test
+	void getByNationalityReturnNotNull() {
+		List<Teacher> teachers = new ArrayList<>();
+		teachers.add(teacher);
+		when(teacherDao.getByNationality("Chinese")).thenReturn(teachers);
+		assertNotNull(teacherService.getByNationality("Chinese"));
+		verify(teacherDao).getByNationality("Chinese");
+	}
 	
 	
 	
