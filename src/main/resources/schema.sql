@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS teachers (
 	email VARCHAR(45) NOT NULL UNIQUE,
     age TINYINT NOT NULL,
     qualification VARCHAR(45) NOT NULL,
-    nacionality VARCHAR(45) NOT NULL,
+    nationality VARCHAR(45) NOT NULL,
     PRIMARY KEY (id)
 );
 
