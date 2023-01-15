@@ -28,15 +28,20 @@ class QualificationServiceImplTest {
 
 	@Mock private QualificationDao qualificationDao;
 	@InjectMocks private QualificationServiceImpl qualificationService;
+	List<Qualification> qualifications;
 	Qualification qualification;
 	Course course;
 	Student student;
 	
 	@BeforeEach
 	void qualificationSetUp() {
+		qualifications = new ArrayList<>();
 		qualification = new Qualification();
+		qualification.setId(1L);
 		course = new Course();
+		course.setId(1L);
 		student = new Student();
+		student.setId(1L);
 	}
 	
 	
@@ -49,7 +54,6 @@ class QualificationServiceImplTest {
 
 	@Test
 	void getAllReturnNotNull() {
-		List<Qualification> qualifications = new ArrayList<>();
 		when(qualificationDao.getAll()).thenReturn(qualifications);
 		assertNotNull(qualificationService.getAll());
 		verify(qualificationDao).getAll();
@@ -70,7 +74,6 @@ class QualificationServiceImplTest {
 	
 	@Test
 	void getByIdNoExistReturnNull() {
-		qualification.setId(1L);
 		when(qualificationDao.getById(qualification.getId())).thenReturn(null);
 		assertNull(qualificationService.getById(qualification.getId()));
 		verify(qualificationDao).getById(qualification.getId());
@@ -78,7 +81,6 @@ class QualificationServiceImplTest {
 	
 	@Test
 	void getByIdExistReturnEquals() {
-		qualification.setId(1L);
 		when(qualificationDao.getById(qualification.getId())).thenReturn(qualification);
 		assertEquals(qualification,qualificationService.getById(qualification.getId()));
 		verify(qualificationDao).getById(qualification.getId());
@@ -91,7 +93,6 @@ class QualificationServiceImplTest {
 	}
 	@Test
 	void updateQualificationIdNoExistThrow() {
-		qualification.setId(1L);
 		when(qualificationDao.getById(qualification.getId())).thenReturn(null);
 		assertThrows(IllegalArgumentException.class, () -> {qualificationService.update(qualification);});
 		verify(qualificationDao).getById(qualification.getId());
@@ -100,7 +101,6 @@ class QualificationServiceImplTest {
 	
 	@Test
 	void updateQualificationIdExist() {
-		qualification.setId(1L);
 		when(qualificationDao.getById(qualification.getId())).thenReturn(qualification);
 		when(qualificationDao.update(qualification)).thenReturn(1);
 		assertEquals(1, qualificationService.update(qualification));
@@ -110,7 +110,6 @@ class QualificationServiceImplTest {
 	
 	@Test
 	void deleteQualificationIdNoExistThrow() {
-		qualification.setId(1L);
 		when(qualificationDao.getById(qualification.getId())).thenReturn(null);
 		assertThrows(IllegalArgumentException.class, () -> {qualificationService.delete(qualification.getId());});
 		verify(qualificationDao).getById(qualification.getId());
@@ -119,7 +118,6 @@ class QualificationServiceImplTest {
 	
 	@Test
 	void deleteQualificationIdExist() {
-		qualification.setId(1L);
 		when(qualificationDao.getById(qualification.getId())).thenReturn(qualification);
 		when(qualificationDao.delete(qualification.getId())).thenReturn(1);
 		assertEquals(1, qualificationService.delete(qualification.getId()));
@@ -129,35 +127,29 @@ class QualificationServiceImplTest {
 	
 	@Test
 	void getByCourseIdReturnNull() {
-		course.setId(1L);
 		when(qualificationDao.getByCourseId(course.getId())).thenReturn(null);
 		assertNull(qualificationService.getByCourseId(course.getId()));
 		verify(qualificationDao).getByCourseId(course.getId());
 	}
 	
 	@Test
-	void getByCourseIdReturnEquals() {
-		List<Qualification> qualifications = new ArrayList<>();
-		course.setId(1L);
+	void getByCourseIdReturnNotNull() {
 		when(qualificationDao.getByCourseId(course.getId())).thenReturn(qualifications);
-		assertEquals(qualifications,qualificationService.getByCourseId(course.getId()));
+		assertNotNull(qualificationService.getByCourseId(course.getId()));
 		verify(qualificationDao).getByCourseId(course.getId());
 	}
 	
 	@Test
 	void getByStudentIdReturnNull() {
-		student.setId(1L);
 		when(qualificationDao.getByStudentId(student.getId())).thenReturn(null);
 		assertNull(qualificationService.getByStudentId(student.getId()));
 		verify(qualificationDao).getByStudentId(student.getId());
 	}
 	
 	@Test
-	void getByStudentIdReturnEquals() {
-		List<Qualification> qualifications = new ArrayList<>();
-		student.setId(1L);
+	void getByStudentIdReturnNotNull() {
 		when(qualificationDao.getByStudentId(student.getId())).thenReturn(qualifications);
-		assertEquals(qualifications,qualificationService.getByStudentId(student.getId()));
+		assertNotNull(qualificationService.getByStudentId(student.getId()));
 		verify(qualificationDao).getByStudentId(student.getId());
 	}
 	

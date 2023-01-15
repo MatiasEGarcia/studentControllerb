@@ -27,11 +27,15 @@ class StudentServiceImplTest {
 
 	@Mock private StudentDao studentDao;
 	@InjectMocks private StudentServiceImpl studentService;
+	List<Student> students ;
 	Student student = new Student();
+	Calendar calendar;
 	
 	@BeforeEach
 	void studentSetUp() {
-		Calendar calendar = Calendar.getInstance();
+		students = new ArrayList<>();
+		student = new Student();
+		calendar = Calendar.getInstance();
 		byte age = 20;
 		student.setId(1L);
 		student.setName("Matias");
@@ -51,8 +55,6 @@ class StudentServiceImplTest {
 	
 	@Test
 	void getAllReturnNotNull() {
-		List<Student> students = new ArrayList<>();
-		students.add(student);
 		when(studentDao.getAll()).thenReturn(students);
 		assertNotNull(studentService.getAll());
 		verify(studentDao).getAll();
@@ -151,8 +153,6 @@ class StudentServiceImplTest {
 	
 	@Test
 	void getByFavoriteLanguageExistReturnNotNull() {
-		List<Student> students = new ArrayList<>();
-		students.add(student);
 		when(studentDao.getByfavoriteLanguage(student.getFavoriteLanguage())).thenReturn(students);
 		assertNotNull(studentService.getByFavoriteLanguage(student.getFavoriteLanguage()));
 		verify(studentDao).getByfavoriteLanguage(student.getFavoriteLanguage());

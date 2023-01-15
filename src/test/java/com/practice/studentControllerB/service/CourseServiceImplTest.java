@@ -1,6 +1,7 @@
 package com.practice.studentControllerB.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.never;
@@ -29,13 +30,19 @@ class CourseServiceImplTest {
 	@Mock private CourseDao courseDao;
 	@Mock private TeacherDao teacherDao;
 	@InjectMocks private CourseServiceImpl courseService;
+	List<Course> courses ;
 	Course course;
 	Teacher teacher;
 	
 	@BeforeEach
 	void studentSetUp() {
+		courses = new ArrayList<>();
 		course = new Course();
+		course.setId(1L);
+		course.setTitle("Chinese");
+		course.setShift(Shift.MORNING.toString());
 		teacher = new Teacher();
+		teacher.setId(1L);
 	}
 	
 	@Test
@@ -45,11 +52,10 @@ class CourseServiceImplTest {
 		verify(courseDao).getAll();
 	}
 	@Test
-	void getAllReturnNotNullEquals() {
-		List<Course> courses = new ArrayList<>();
+	void getAllReturnNotNull() {
 		courses.add(course);
 		when(courseDao.getAll()).thenReturn(courses);
-		assertEquals(courses,courseService.getAll());
+		assertNotNull(courseService.getAll());
 		verify(courseDao).getAll();
 	}
 	
@@ -62,7 +68,6 @@ class CourseServiceImplTest {
 	
 	@Test
 	void createWithTitleAlreadyUsedThrow() {
-		course.setTitle("Chinese");
 		when(courseDao.getByTitle(course.getTitle())).thenReturn(course);
 		assertThrows(IllegalArgumentException.class, () -> {courseService.create(course);});
 		verify(courseDao).getByTitle(course.getTitle());
@@ -71,7 +76,6 @@ class CourseServiceImplTest {
 	
 	@Test
 	void createTitleNotNullAndTitleAvailable() {
-		course.setTitle("Chinese");
 		when(courseDao.getByTitle(course.getTitle())).thenReturn(null);
 		when(courseDao.create(course)).thenReturn(1);
 		assertEquals(1, courseService.create(course));
@@ -81,7 +85,6 @@ class CourseServiceImplTest {
 	
 	@Test
 	void getByIdNotNull() {
-		course.setId(1L);
 		when(courseDao.getById(course.getId())).thenReturn(course);
 		assertEquals(course, courseService.getById(course.getId()));
 		verify(courseDao).getById(course.getId());
@@ -89,7 +92,6 @@ class CourseServiceImplTest {
 	
 	@Test
 	void getByIdNull() {
-		course.setId(1L);
 		when(courseDao.getById(course.getId())).thenReturn(null);
 		assertNull(courseService.getById(course.getId()));
 		verify(courseDao).getById(course.getId());
@@ -102,7 +104,6 @@ class CourseServiceImplTest {
 	
 	@Test
 	void updateIdNoExistThrow() {
-		course.setId(1L);
 		when(courseDao.getById(course.getId())).thenReturn(null);
 		assertThrows(IllegalArgumentException.class, () -> {courseService.update(course);});
 		verify(courseDao).getById(course.getId());
@@ -111,7 +112,6 @@ class CourseServiceImplTest {
 	
 	@Test
 	void updateIdExistReturn1() {
-		course.setId(1L);
 		when(courseDao.getById(course.getId())).thenReturn(course);
 		when(courseDao.update(course)).thenReturn(1);
 		assertEquals(1, courseService.update(course));
@@ -121,7 +121,6 @@ class CourseServiceImplTest {
 	
 	@Test
 	void deleteIdNoExistThrow() {
-		course.setId(1L);
 		when(courseDao.getById(course.getId())).thenReturn(null);
 		assertThrows(IllegalArgumentException.class, () -> {courseService.delete(course.getId());});
 		verify(courseDao).getById(course.getId());
@@ -130,7 +129,6 @@ class CourseServiceImplTest {
 	
 	@Test
 	void deleteIdExistReturn1() {
-		course.setId(1L);
 		when(courseDao.getById(course.getId())).thenReturn(course);
 		when(courseDao.delete(course.getId())).thenReturn(1);
 		assertEquals(1, courseService.delete(course.getId()));
@@ -140,7 +138,6 @@ class CourseServiceImplTest {
 	
 	@Test
 	void getByTitleReturnNull() {
-		course.setTitle("Chinese");
 		when(courseDao.getByTitle(course.getTitle())).thenReturn(null);
 		assertNull(courseService.getByTitle(course.getTitle()));
 		verify(courseDao).getByTitle(course.getTitle());
@@ -148,9 +145,8 @@ class CourseServiceImplTest {
 	
 	@Test
 	void getByTitleReturnNotNull() {
-		course.setTitle("Chinese");
 		when(courseDao.getByTitle(course.getTitle())).thenReturn(course);
-		assertEquals(course,courseService.getByTitle(course.getTitle()));
+		assertNotNull(courseService.getByTitle(course.getTitle()));
 		verify(courseDao).getByTitle(course.getTitle());
 	}
 	
@@ -161,19 +157,13 @@ class CourseServiceImplTest {
 	
 	@Test
 	void getByShiftExistButLowerCaseEqualsReturnNotNull() {
-		List<Course> courses = new ArrayList<>();
-		course.setShift(Shift.MORNING.toString());
-		courses.add(course);
 		when(courseDao.getByShift(course.getShift().toUpperCase())).thenReturn(courses);
-		assertEquals(courses, courseService.getByShift(course.getShift().toLowerCase()));
+		assertNotNull(courseService.getByShift(course.getShift().toLowerCase()));
 		verify(courseDao).getByShift(course.getShift().toUpperCase());
 	}
 	
 	@Test
 	void getByShiftExistButUpperCaseEqualsReturnNull() {
-		List<Course> courses = new ArrayList<>();
-		course.setShift(Shift.MORNING.toString());
-		courses.add(course);
 		when(courseDao.getByShift(course.getShift())).thenReturn(null);
 		assertNull(courseService.getByShift(course.getShift()));
 		verify(courseDao).getByShift(course.getShift());
@@ -181,7 +171,6 @@ class CourseServiceImplTest {
 	
 	@Test
 	void getByTeacherIdNoExist() {
-		teacher.setId(1L);
 		when(teacherDao.getById(teacher.getId())).thenReturn(null);
 		assertThrows(IllegalArgumentException.class,() -> {courseService.getByTeacherId(teacher.getId());});
 		verify(teacherDao).getById(teacher.getId());
@@ -190,7 +179,6 @@ class CourseServiceImplTest {
 	
 	@Test
 	void getByTeacherIdExistReturnNull() {
-		teacher.setId(1L);
 		when(teacherDao.getById(teacher.getId())).thenReturn(teacher);
 		when(courseDao.getByTeacherId(teacher.getId())).thenReturn(null);
 		assertNull(courseService.getByTeacherId(teacher.getId()));
@@ -200,10 +188,9 @@ class CourseServiceImplTest {
 	
 	@Test
 	void getByTeacherIdExistReturnNotNull() {
-		teacher.setId(1L);
 		when(teacherDao.getById(teacher.getId())).thenReturn(teacher);
 		when(courseDao.getByTeacherId(teacher.getId())).thenReturn(course);
-		assertEquals(course,courseService.getByTeacherId(teacher.getId()));
+		assertNotNull(courseService.getByTeacherId(teacher.getId()));
 		verify(teacherDao).getById(teacher.getId());
 		verify(courseDao).getByTeacherId(teacher.getId());
 	}

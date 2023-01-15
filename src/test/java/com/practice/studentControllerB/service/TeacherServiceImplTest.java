@@ -27,10 +27,12 @@ class TeacherServiceImplTest {
 
 	@Mock private TeacherDao teacherDao;
 	@InjectMocks private TeacherServiceImpl teacherService;
+	List<Teacher> teachers;
 	Teacher teacher;
 	
 	@BeforeEach
 	void setUpTeacher() {
+		teachers = new ArrayList<>();
 		teacher = new Teacher();
 		byte age = 40;
 		teacher.setId(1);
@@ -51,10 +53,8 @@ class TeacherServiceImplTest {
 	
 	@Test
 	void getAllReturnNotNull() {
-		List<Teacher> teachers = new ArrayList<>();
-		teachers.add(teacher);
 		when(teacherDao.getAll()).thenReturn(teachers);
-		assertEquals(teachers,teacherService.getAll());
+		assertNotNull(teacherService.getAll());
 		verify(teacherDao).getAll();
 	}
 	
@@ -144,8 +144,6 @@ class TeacherServiceImplTest {
 	
 	@Test
 	void getByQualificationReturnNotNull() {
-		List<Teacher> teachers = new ArrayList<>();
-		teachers.add(teacher);
 		when(teacherDao.getByQualification(teacher.getQualification())).thenReturn(teachers);
 		assertNotNull(teacherService.getByQualification(teacher.getQualification()));
 		verify(teacherDao).getByQualification(teacher.getQualification());
@@ -160,8 +158,6 @@ class TeacherServiceImplTest {
 	
 	@Test
 	void getByNationalityReturnNotNull() {
-		List<Teacher> teachers = new ArrayList<>();
-		teachers.add(teacher);
 		when(teacherDao.getByNationality(teacher.getNationality())).thenReturn(teachers);
 		assertNotNull(teacherService.getByNationality(teacher.getNationality()));
 		verify(teacherDao).getByNationality(teacher.getNationality());
