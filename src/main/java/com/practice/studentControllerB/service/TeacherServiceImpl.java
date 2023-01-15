@@ -35,7 +35,7 @@ public class TeacherServiceImpl implements TeacherService{
 	public List<Teacher> getAll() {
 		List<Teacher> teachers = teacherDao.getAll();
 		if(teachers != null) return Collections.unmodifiableList(teachers);
-		return teachers;
+		return null;
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class TeacherServiceImpl implements TeacherService{
 	public List<Teacher> getByQualification(String qualification) {
 		List<Teacher> teachers = teacherDao.getByQualification(qualification);
 		if(teachers != null) return Collections.unmodifiableList(teachers);
-		return teachers;
+		return null;
 	}
 
 	@Override
@@ -77,7 +77,7 @@ public class TeacherServiceImpl implements TeacherService{
 	public List<Teacher> getByNationality(String nationality) {
 		List<Teacher> teachers = teacherDao.getByNationality(nationality);
 		if(teachers != null) return Collections.unmodifiableList(teachers);
-		return teachers;
+		return null;
 	}
 
 }

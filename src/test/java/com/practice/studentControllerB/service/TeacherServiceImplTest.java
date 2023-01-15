@@ -137,34 +137,34 @@ class TeacherServiceImplTest {
 	
 	@Test
 	void getByQualificationReturnNull() {
-		when(teacherDao.getByQualification(QualificationE.UNIVERSITARY.toString())).thenReturn(null);
-		assertNull(teacherService.getByQualification(QualificationE.UNIVERSITARY.toString()));
-		verify(teacherDao).getByQualification(QualificationE.UNIVERSITARY.toString());
+		when(teacherDao.getByQualification(teacher.getQualification())).thenReturn(null);
+		assertNull(teacherService.getByQualification(teacher.getQualification()));
+		verify(teacherDao).getByQualification(teacher.getQualification());
 	}
 	
 	@Test
 	void getByQualificationReturnNotNull() {
 		List<Teacher> teachers = new ArrayList<>();
 		teachers.add(teacher);
-		when(teacherDao.getByQualification(QualificationE.UNIVERSITARY.toString())).thenReturn(teachers);
-		assertNotNull(teacherService.getByQualification(QualificationE.UNIVERSITARY.toString()));
-		verify(teacherDao).getByQualification(QualificationE.UNIVERSITARY.toString());
+		when(teacherDao.getByQualification(teacher.getQualification())).thenReturn(teachers);
+		assertNotNull(teacherService.getByQualification(teacher.getQualification()));
+		verify(teacherDao).getByQualification(teacher.getQualification());
 	}
 	
 	@Test
 	void getByNationalityReturnNull() {
-		when(teacherDao.getByNationality("Chinese")).thenReturn(null);
-		assertNull(teacherService.getByNationality("Chinese"));
-		verify(teacherDao).getByNationality("Chinese");
+		when(teacherDao.getByNationality(teacher.getNationality())).thenReturn(null);
+		assertNull(teacherService.getByNationality(teacher.getNationality()));
+		verify(teacherDao).getByNationality(teacher.getNationality());
 	}
 	
 	@Test
 	void getByNationalityReturnNotNull() {
 		List<Teacher> teachers = new ArrayList<>();
 		teachers.add(teacher);
-		when(teacherDao.getByNationality("Chinese")).thenReturn(teachers);
-		assertNotNull(teacherService.getByNationality("Chinese"));
-		verify(teacherDao).getByNationality("Chinese");
+		when(teacherDao.getByNationality(teacher.getNationality())).thenReturn(teachers);
+		assertNotNull(teacherService.getByNationality(teacher.getNationality()));
+		verify(teacherDao).getByNationality(teacher.getNationality());
 	}
 	
 	
