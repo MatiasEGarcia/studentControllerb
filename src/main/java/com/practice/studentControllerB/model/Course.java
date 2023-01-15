@@ -13,7 +13,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Course {
 
-	private String titulo;
+	private Long id;
+	private String title;
 	private String shift; 
 	private Teacher teacher;
 }
