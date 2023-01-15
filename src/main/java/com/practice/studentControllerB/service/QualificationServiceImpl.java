@@ -31,7 +31,7 @@ public class QualificationServiceImpl implements QualificationService{
 	public List<Qualification> getAll() {
 		List<Qualification> qualifications = qualificationDao.getAll();
 		if(qualifications != null) return Collections.unmodifiableList(qualifications); 
-		return qualifications;
+		return null;
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class QualificationServiceImpl implements QualificationService{
 	public List<Qualification> getByCourseId(Long course) {
 		List<Qualification> qualifications = qualificationDao.getByCourseId(course);
 		if(qualifications != null) return Collections.unmodifiableList(qualifications);
-		return qualifications;
+		return null;
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class QualificationServiceImpl implements QualificationService{
 	public List<Qualification> getByStudentId(Long student) {
 		List<Qualification> qualifications = qualificationDao.getByStudentId(student);
 		if(qualifications != null) return Collections.unmodifiableList(qualifications);
-		return qualifications;
+		return null;
 	}
 
 }
