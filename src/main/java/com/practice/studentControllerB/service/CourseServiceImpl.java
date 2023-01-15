@@ -42,8 +42,8 @@ public class CourseServiceImpl implements CourseService {
 	@Transactional(readOnly = true)
 	public List<Course> getAll() {
 		List<Course> courses = courseDao.getAll();
-		if(courses != null) Collections.unmodifiableList(courses);
-		return courses;
+		if(courses != null) return Collections.unmodifiableList(courses);
+		return null;
 	}
 
 	@Override
@@ -96,7 +96,7 @@ public class CourseServiceImpl implements CourseService {
 		if(flag == false) throw new IllegalArgumentException(shiftNotFound);
 		courses = courseDao.getByShift(shift.toUpperCase());
 		if(courses != null) return Collections.unmodifiableList(courses);
-		return courses;
+		return null;
 	}
 
 	@Override

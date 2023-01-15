@@ -96,6 +96,11 @@ class CourseServiceImplTest {
 	}
 	
 	@Test
+	void updateArgumentNull() {
+		assertThrows(IllegalArgumentException.class, () -> {courseService.update(null);});
+	}
+	
+	@Test
 	void updateIdNoExistThrow() {
 		course.setId(1L);
 		when(courseDao.getById(course.getId())).thenReturn(null);
