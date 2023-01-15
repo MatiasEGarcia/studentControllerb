@@ -85,6 +85,11 @@ class QualificationServiceImplTest {
 	}
 	
 	@Test
+	void updateArgumentNullThrow() {
+		assertThrows(IllegalArgumentException.class, () -> {qualificationService.update(null);});
+		verify(qualificationDao,never()).update(null);
+	}
+	@Test
 	void updateQualificationIdNoExistThrow() {
 		qualification.setId(1L);
 		when(qualificationDao.getById(qualification.getId())).thenReturn(null);
