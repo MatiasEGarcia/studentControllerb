@@ -34,7 +34,7 @@ public class StudentServiceImpl implements StudentService{
 	public List<Student> getAll() {
 		List<Student> students = studentDao.getAll();
 		if(students != null) return Collections.unmodifiableList(students);
-		return students; //can return null list
+		return null;
 	}
 
 	@Override
@@ -71,8 +71,10 @@ public class StudentServiceImpl implements StudentService{
 
 	@Override
 	@Transactional(readOnly = true)
-	public List<Student> favoriteLanguage(String language) {
-		return studentDao.getByfavoriteLanguage(language);
+	public List<Student> getByFavoriteLanguage(String language) {
+		List<Student> students = studentDao.getByfavoriteLanguage(language);
+		if(students != null) return Collections.unmodifiableList(students);
+		return null;
 	}
 
 }

@@ -8,6 +8,6 @@ public interface StudentService extends GenericService<Student> {
 
 	Student getByEmail(String email);
 
-	List<Student> favoriteLanguage(String string);
+	List<Student> getByFavoriteLanguage(String string);
 
 }

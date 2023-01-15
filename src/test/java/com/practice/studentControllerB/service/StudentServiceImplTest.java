@@ -145,7 +145,7 @@ class StudentServiceImplTest {
 	@Test
 	void getByFavoriteLanguageNoExistReturnNull() {
 		when(studentDao.getByfavoriteLanguage(student.getFavoriteLanguage())).thenReturn(null);
-		assertNull(studentService.favoriteLanguage(student.getFavoriteLanguage()));
+		assertNull(studentService.getByFavoriteLanguage(student.getFavoriteLanguage()));
 		verify(studentDao).getByfavoriteLanguage(student.getFavoriteLanguage());
 	}
 	
@@ -154,7 +154,7 @@ class StudentServiceImplTest {
 		List<Student> students = new ArrayList<>();
 		students.add(student);
 		when(studentDao.getByfavoriteLanguage(student.getFavoriteLanguage())).thenReturn(students);
-		assertNotNull(studentService.favoriteLanguage(student.getFavoriteLanguage()));
+		assertNotNull(studentService.getByFavoriteLanguage(student.getFavoriteLanguage()));
 		verify(studentDao).getByfavoriteLanguage(student.getFavoriteLanguage());
 	}
 	
