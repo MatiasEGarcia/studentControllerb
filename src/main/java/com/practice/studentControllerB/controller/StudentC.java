@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,15 +15,6 @@ import com.practice.studentControllerB.config.prop.ControllerProp;
 import com.practice.studentControllerB.model.Student;
 import com.practice.studentControllerB.payload.response.Message;
 import com.practice.studentControllerB.service.StudentService;
-
-import java.net.InetAddress;
-
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
 
 @RestController
 @RequestMapping("/studentC")
@@ -33,7 +25,7 @@ public class StudentC {
 	private StudentService studentS;
 	
 	@Autowired
-	private ControllerProp contProp;
+	private ControllerProp contProp;//here I have the properties messages
 	
 	@GetMapping(value="/getAll")
 	public ResponseEntity<?> getAll(){
@@ -42,6 +34,16 @@ public class StudentC {
 			return new ResponseEntity<>(new Message(contProp.getNoStudents()),HttpStatus.NO_CONTENT);
 		}else {
 			return new ResponseEntity<>(students,HttpStatus.OK);
+		}
+	}
+	
+	@GetMapping(value="/getById/{id}")
+	public ResponseEntity<?> getById(@PathVariable("id") Long id){
+		Student student = studentS.getById(id);
+		if(student == null) {
+			return new ResponseEntity<>(new Message(contProp.getStudentIdNotFound()),HttpStatus.BAD_REQUEST);
+		}else {
+			return new ResponseEntity<>(student,HttpStatus.OK);
 		}
 	}
 	

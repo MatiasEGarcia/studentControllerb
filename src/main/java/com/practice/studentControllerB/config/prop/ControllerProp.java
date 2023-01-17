@@ -15,4 +15,6 @@ import lombok.Setter;
 public class ControllerProp {
 
 	private String noStudents;
+	
+	private String studentIdNotFound;
 }

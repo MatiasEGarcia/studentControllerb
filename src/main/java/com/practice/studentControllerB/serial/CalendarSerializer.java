@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 //from json to calendar
 public class CalendarSerializer extends JsonSerializer<Calendar>{
 
-	private SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	
 	@Override
 	public void serialize(Calendar calendar, JsonGenerator gen, SerializerProvider serializers) throws IOException {

@@ -12,8 +12,7 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 
 public class CalendarDeserializer extends JsonDeserializer<Calendar> {
 
-	private SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-	
+	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	@Override
 	public Calendar deserialize(JsonParser jsonParser, DeserializationContext ctxt) throws IOException, JacksonException {
 		String dateAsString = jsonParser.getText();

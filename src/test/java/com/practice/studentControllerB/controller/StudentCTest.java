@@ -97,6 +97,29 @@ class StudentCTest {
 		.andExpect(jsonPath("$.message",is(contProp.getNoStudents())));
 	}
 	
+	@Test
+	void getByIdReturnBadRequestHttpStatus() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/studentC/getById/{id}",100))//student with id don't exist
+		.andExpect(status().isBadRequest())
+		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+		.andExpect(jsonPath("$.message",is(contProp.getStudentIdNotFound())));
+	}
+	
+	@Test
+	void getByIdReturnOkHttpStatus() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/studentC/getById/{id}",1))
+		.andExpect(status().isOk())
+		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+		.andExpect(jsonPath("$.id",is(1)))
+		.andExpect(jsonPath("$.name",is("Matias")))
+		.andExpect(jsonPath("$.lastname",is("Garcia")))
+		.andExpect(jsonPath("$.email",is("mati@gmail.com")))
+		.andExpect(jsonPath("$.age",is(23)))
+		.andExpect(jsonPath("$.addmissionDate",is("2010-10-20")))
+		.andExpect(jsonPath("$.favoriteLanguage",is("Chinese")));
+	}
+	
+	
 	@AfterEach
 	void setUpAfterTransaction() {
 		jdbc.execute(sqlRefIntegrityFalse);
