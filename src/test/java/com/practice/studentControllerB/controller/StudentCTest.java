@@ -1,9 +1,13 @@
 package com.practice.studentControllerB.controller;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Calendar;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import org.junit.jupiter.api.AfterEach;
@@ -22,6 +26,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.studentControllerB.config.prop.ControllerProp;
 import com.practice.studentControllerB.dao.StudentDao;
@@ -119,6 +124,27 @@ class StudentCTest {
 		.andExpect(jsonPath("$.favoriteLanguage",is("Chinese")));
 	}
 	
+	@Test
+	void createStudentWithEmailAlreadyUsed() throws Exception {
+		assertNotNull(studentD.getByEmail("mati@gmail.com"));
+		student.setName("Matias");
+		student.setLastname("Andreo");
+		student.setEmail("mati@gmail.com");
+		byte age = 25;
+		student.setAge(age);
+		student.setFavoriteLanguage("English");
+		Calendar calendar = Calendar.getInstance();
+		student.setAddmissionDate(calendar);
+		
+		mockMvc.perform(MockMvcRequestBuilders.get("studentC/create")
+				.contentType(APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(student)))
+				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message",is("ACA VA EL MENSAJE")));
+			
+		
+	}
 	
 	
 	@AfterEach

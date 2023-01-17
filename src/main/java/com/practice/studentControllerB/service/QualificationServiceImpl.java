@@ -3,28 +3,21 @@ package com.practice.studentControllerB.service;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.practice.studentControllerB.config.prop.ExceptionProp;
 import com.practice.studentControllerB.dao.QualificationDao;
 import com.practice.studentControllerB.model.Qualification;
 
 import lombok.RequiredArgsConstructor;
 
-@PropertySource("classpath:application-messages.properties")
 @RequiredArgsConstructor
 @Service
 public class QualificationServiceImpl implements QualificationService{
 	
 	private final QualificationDao qualificationDao;
-	
-	@Value("${e.qualification.must.not.be.null}")
-	private String qualificationNotNull;
-	
-	@Value("${e.qualification.id.not.found}")
-	private String qualificationIdNotFound;
+	private final ExceptionProp excepProp;
 	
 	@Override
 	@Transactional(readOnly=true)
@@ -37,7 +30,7 @@ public class QualificationServiceImpl implements QualificationService{
 	@Override
 	@Transactional
 	public int create(Qualification t) {
-		if(t == null) throw new IllegalArgumentException(qualificationNotNull);
+		if(t == null) throw new IllegalArgumentException(excepProp.getQualificationNotNull());
 		return qualificationDao.create(t);
 	}
 
@@ -50,15 +43,15 @@ public class QualificationServiceImpl implements QualificationService{
 	@Override
 	@Transactional
 	public int update(Qualification t) {
-		if(t == null) throw new IllegalArgumentException(qualificationNotNull);
-		if(qualificationDao.getById(t.getId()) == null) throw new IllegalArgumentException(qualificationIdNotFound);
+		if(t == null) throw new IllegalArgumentException(excepProp.getQualificationNotNull());
+		if(qualificationDao.getById(t.getId()) == null) throw new IllegalArgumentException(excepProp.getQualificationIdNotFound());
 		return qualificationDao.update(t);
 	}
 
 	@Override
 	@Transactional
 	public int delete(Long id) {
-		if(qualificationDao.getById(id) == null) throw new IllegalArgumentException(qualificationIdNotFound);
+		if(qualificationDao.getById(id) == null) throw new IllegalArgumentException(excepProp.getQualificationIdNotFound());
 		return qualificationDao.delete(id);
 	}
 

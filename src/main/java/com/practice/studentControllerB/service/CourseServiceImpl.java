@@ -3,11 +3,10 @@ package com.practice.studentControllerB.service;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.practice.studentControllerB.config.prop.ExceptionProp;
 import com.practice.studentControllerB.dao.CourseDao;
 import com.practice.studentControllerB.dao.TeacherDao;
 import com.practice.studentControllerB.model.Course;
@@ -15,28 +14,13 @@ import com.practice.studentControllerB.model.Shift;
 
 import lombok.RequiredArgsConstructor;
 
-@PropertySource("classpath:application-messages.properties")
 @RequiredArgsConstructor
 @Service
 public class CourseServiceImpl implements CourseService {
 	
 	private final CourseDao courseDao;
 	private final TeacherDao teacherDao;
-	
-	@Value("${e.course.must.not.be.null}")
-	private String courseNotNull;
-	
-	@Value("${e.course.id.not.found}")
-	private String courseIdNotFound;
-	
-	@Value("${e.course.title.already.used}")
-	private String courseTitleAlreadyUsed;
-	
-	@Value("${e.teacher.id.not.found}")
-	private String teacherIdNotFound;
-	
-	@Value("${e.shift.not.found}")
-	private String shiftNotFound;
+	private final ExceptionProp excepProp;
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -49,8 +33,8 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	@Transactional
 	public int create(Course t) {
-		if(t == null) throw new IllegalArgumentException(courseNotNull);
-		if(courseDao.getByTitle(t.getTitle()) != null) throw new IllegalArgumentException(courseTitleAlreadyUsed);
+		if(t == null) throw new IllegalArgumentException(excepProp.getCourseNotnull());
+		if(courseDao.getByTitle(t.getTitle()) != null) throw new IllegalArgumentException(excepProp.getCourseTitleAlreadyUsed());
 		return courseDao.create(t);
 	}
 
@@ -63,15 +47,15 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	@Transactional
 	public int update(Course t) {
-		if(t == null) throw new IllegalArgumentException(courseNotNull);
-		if(courseDao.getById(t.getId()) == null) throw new IllegalArgumentException(courseIdNotFound);
+		if(t == null) throw new IllegalArgumentException(excepProp.getCourseNotnull());
+		if(courseDao.getById(t.getId()) == null) throw new IllegalArgumentException(excepProp.getCourseIdNotFound());
 		return courseDao.update(t);
 	}
 
 	@Override
 	@Transactional
 	public int delete(Long id) {
-		if(courseDao.getById(id) == null) throw new IllegalArgumentException(courseIdNotFound);
+		if(courseDao.getById(id) == null) throw new IllegalArgumentException(excepProp.getCourseIdNotFound());
 		return courseDao.delete(id);
 	}
 
@@ -93,7 +77,7 @@ public class CourseServiceImpl implements CourseService {
 				break;
 			}
 		}
-		if(flag == false) throw new IllegalArgumentException(shiftNotFound);
+		if(flag == false) throw new IllegalArgumentException(excepProp.getShiftNotFound());
 		courses = courseDao.getByShift(shift.toUpperCase());
 		if(courses != null) return Collections.unmodifiableList(courses);
 		return null;
@@ -102,7 +86,7 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	@Transactional(readOnly = true)
 	public Course getByTeacherId(Long teacher) {
-		if(teacherDao.getById(teacher) == null) throw new IllegalArgumentException(teacherIdNotFound);
+		if(teacherDao.getById(teacher) == null) throw new IllegalArgumentException(excepProp.getTeacherIdNotFound());
 		return courseDao.getByTeacherId(teacher);
 	}
 

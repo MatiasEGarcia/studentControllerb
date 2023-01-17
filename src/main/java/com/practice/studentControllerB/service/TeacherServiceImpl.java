@@ -3,31 +3,21 @@ package com.practice.studentControllerB.service;
 import java.util.Collections;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.practice.studentControllerB.config.prop.ExceptionProp;
 import com.practice.studentControllerB.dao.TeacherDao;
 import com.practice.studentControllerB.model.Teacher;
 
 import lombok.RequiredArgsConstructor;
 
-@PropertySource("classpath:application-messages.properties")
 @RequiredArgsConstructor
 @Service
 public class TeacherServiceImpl implements TeacherService{
 
 	private final TeacherDao teacherDao;
-	
-	@Value("${e.teacher.must.not.be.null}")
-	private String teacherNotNull;
-
-	@Value("${e.teacher.email.already.used}")
-	private String teacherEmailAlreadyUsed;
-	
-	@Value("${e.teacher.id.not.found}")
-	private String teacherIdNotFound;
+	private final ExceptionProp excepProp;
 	
 	
 	@Override
@@ -40,8 +30,8 @@ public class TeacherServiceImpl implements TeacherService{
 
 	@Override
 	public int create(Teacher t) {
-		if(t == null) throw new IllegalArgumentException(teacherNotNull);
-		if(teacherDao.getByEmail(t.getEmail()) != null) throw new IllegalArgumentException(teacherEmailAlreadyUsed); 
+		if(t == null) throw new IllegalArgumentException(excepProp.getTeacherNotNull());
+		if(teacherDao.getByEmail(t.getEmail()) != null) throw new IllegalArgumentException(excepProp.getTeacherEmailAlreadyUsed()); 
 		return teacherDao.create(t);
 	}
 
@@ -53,14 +43,14 @@ public class TeacherServiceImpl implements TeacherService{
 
 	@Override
 	public int update(Teacher t) {
-		if(t == null) throw new IllegalArgumentException(teacherNotNull);
-		if(teacherDao.getById(t.getId()) == null) throw new IllegalArgumentException(teacherIdNotFound);
+		if(t == null) throw new IllegalArgumentException(excepProp.getTeacherNotNull());
+		if(teacherDao.getById(t.getId()) == null) throw new IllegalArgumentException(excepProp.getTeacherIdNotFound());
 		return teacherDao.update(t);
 	}
 
 	@Override
 	public int delete(Long id) {
-		if(teacherDao.getById(id) == null) throw new IllegalArgumentException(teacherIdNotFound);
+		if(teacherDao.getById(id) == null) throw new IllegalArgumentException(excepProp.getTeacherIdNotFound());
 		return teacherDao.delete(id);
 	}
 
