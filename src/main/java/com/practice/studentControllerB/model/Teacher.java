@@ -15,6 +15,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Teacher extends Person{
 
-	String qualification; //enum
-	String nationality;
+	private static final long serialVersionUID = 1L;
+	private String qualification; //enum
+	private String nationality;
 }
