@@ -1,22 +1,20 @@
 package com.practice.studentControllerB.controller;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Calendar;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -29,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.studentControllerB.config.prop.ControllerProp;
+import com.practice.studentControllerB.config.prop.ExceptionProp;
 import com.practice.studentControllerB.dao.StudentDao;
 import com.practice.studentControllerB.model.Student;
 
@@ -53,6 +52,9 @@ class StudentCTest {
 	
 	@Autowired
 	private ControllerProp contProp;
+	
+	@Autowired
+	private ExceptionProp excepProp;
 	
 	@Value("${sql.script.create.student}")
 	private String sqlAddStudent;
@@ -136,14 +138,50 @@ class StudentCTest {
 		Calendar calendar = Calendar.getInstance();
 		student.setAddmissionDate(calendar);
 		
-		mockMvc.perform(MockMvcRequestBuilders.get("studentC/create")
+		mockMvc.perform(MockMvcRequestBuilders.post("/studentC/create")
 				.contentType(APPLICATION_JSON_UTF8)
 				.content(objectMapper.writeValueAsString(student)))
 				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.message",is("ACA VA EL MENSAJE")));
-			
+				.andExpect(jsonPath("$.message",is(excepProp.getStudentEmailAlreadyUsed())));
+	}
+	
+	@Test
+	void createOkHttpStatus() throws Exception {
+		student.setName("Matias");
+		student.setLastname("Andreo");
+		student.setEmail("matiAndreo@gmail.com");
+		byte age = 25;
+		student.setAge(age);
+		student.setFavoriteLanguage("English");
+		Calendar calendar = Calendar.getInstance();
+		student.setAddmissionDate(calendar);
 		
+		mockMvc.perform(MockMvcRequestBuilders.post("/studentC/create")
+				.contentType(APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(student)))
+				.andExpect(status().isOk());
+		
+		assertNotNull(studentD.getByEmail("matiAndreo@gmail.com"));
+	}
+	
+	@Test
+	void createWithFieldsNullBadRequest() throws Exception {
+		//email and lastname are null
+		student.setName("Matias");
+		byte age = 25;
+		student.setAge(age);
+		student.setFavoriteLanguage("English");
+		Calendar calendar = Calendar.getInstance();
+		student.setAddmissionDate(calendar);
+		
+		mockMvc.perform(MockMvcRequestBuilders.post("/studentC/create")
+				.contentType(APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(student)))
+				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.email",is("email mustn't be blank")))
+				.andExpect(jsonPath("$.lastname",is("lastname mustn't be blank")));
 	}
 	
 	
