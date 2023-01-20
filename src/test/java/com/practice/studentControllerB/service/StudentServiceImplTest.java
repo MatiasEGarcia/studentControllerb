@@ -19,14 +19,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.practice.studentControllerB.config.prop.ExceptionProp;
 import com.practice.studentControllerB.dao.StudentDao;
 import com.practice.studentControllerB.model.Student;
 
 @ExtendWith(MockitoExtension.class)
 class StudentServiceImplTest {
 
-	@Mock private ExceptionProp excepProp;
 	@Mock private StudentDao studentDao;
 	@InjectMocks private StudentServiceImpl studentService;
 	List<Student> students ;

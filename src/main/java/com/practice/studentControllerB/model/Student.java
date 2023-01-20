@@ -24,13 +24,11 @@ import lombok.Setter;
 @Data
 @EqualsAndHashCode(callSuper=true)
 @AllArgsConstructor
-@ConfigurationProperties("vali.student")
-@Validated
 public class Student extends Person{
 
 	private static final long serialVersionUID = 1L;
 	
-	@NotNull(message = "{addmissionDate.not.null}")
+	@NotNull(message = "{vali.student-addmissionDate-not-null}")
 	@JsonSerialize(using = CalendarSerializer.class)
 	@JsonDeserialize(using = CalendarDeserializer.class)
 	private Calendar  addmissionDate;

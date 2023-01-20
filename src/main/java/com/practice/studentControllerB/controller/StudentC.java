@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.practice.studentControllerB.config.prop.ControllerProp;
 import com.practice.studentControllerB.model.Student;
 import com.practice.studentControllerB.payload.response.Message;
 import com.practice.studentControllerB.service.StudentService;
@@ -29,14 +28,11 @@ public class StudentC {
 	@Autowired
 	private StudentService studentS;
 	
-	@Autowired
-	private ControllerProp contProp;//here I have the properties messages
-	
 	@GetMapping(value="/getAll")
 	public ResponseEntity<?> getAll(){
 		List<Student> students = studentS.getAll();
 		if(students == null) {
-			return new ResponseEntity<>(new Message(contProp.getNoStudents()),HttpStatus.NO_CONTENT);
+			return new ResponseEntity<>(new Message("{contr.there-no-students}"),HttpStatus.NO_CONTENT);
 		}else {
 			return new ResponseEntity<>(students,HttpStatus.OK);
 		}
@@ -46,7 +42,7 @@ public class StudentC {
 	public ResponseEntity<?> getById(@PathVariable("id") Long id){
 		Student student = studentS.getById(id);
 		if(student == null) {
-			return new ResponseEntity<>(new Message(contProp.getStudentIdNotFound()),HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new Message("{contr.student-id-not-found}"),HttpStatus.BAD_REQUEST);
 		}else {
 			return new ResponseEntity<>(student,HttpStatus.OK);
 		}

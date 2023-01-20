@@ -19,24 +19,22 @@ import lombok.Setter;
 @NoArgsConstructor
 @Data
 @AllArgsConstructor
-@ConfigurationProperties("vali.person")
-@Validated
 public class Person implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private long id;
 	
-	@NotBlank(message= "{name.not.blank}")
+	@NotBlank(message= "{vali.person.name-not-blank}")
 	private String name;
 	
-	@NotBlank(message= "{lastname.not.blank}")
+	@NotBlank(message= "{vali.person.lastname-not-blank}")
 	private String lastname;
 	
-	@NotBlank(message= "{email.not.blank}")
+	@NotBlank(message= "{vali.person.email-not-blank}")
 	private String email;
 	
-	@NotNull(message= "{age.not.null}")
-	@Range(max = 70, min = 18, message ="{age.max.min}")
+	@NotNull(message= "{vali.person.age-not-null}")
+	@Range(max = 70, min = 18, message ="{vali.person.age-max-min}")
 	private byte age;
 }

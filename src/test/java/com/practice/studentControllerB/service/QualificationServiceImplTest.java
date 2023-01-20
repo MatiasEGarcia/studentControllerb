@@ -18,7 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.practice.studentControllerB.config.prop.ExceptionProp;
 import com.practice.studentControllerB.dao.QualificationDao;
 import com.practice.studentControllerB.model.Course;
 import com.practice.studentControllerB.model.Qualification;
@@ -27,7 +26,6 @@ import com.practice.studentControllerB.model.Student;
 @ExtendWith(MockitoExtension.class)
 class QualificationServiceImplTest {
 
-	@Mock private ExceptionProp excepProp;
 	@Mock private QualificationDao qualificationDao;
 	@InjectMocks private QualificationServiceImpl qualificationService;
 	List<Qualification> qualifications;

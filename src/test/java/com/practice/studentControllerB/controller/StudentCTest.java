@@ -8,6 +8,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Calendar;
+import java.util.Locale;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.MessageSource;
 import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -24,10 +26,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.practice.studentControllerB.config.prop.ControllerProp;
-import com.practice.studentControllerB.config.prop.ExceptionProp;
 import com.practice.studentControllerB.dao.StudentDao;
 import com.practice.studentControllerB.model.Student;
 
@@ -51,10 +50,7 @@ class StudentCTest {
 	private StudentDao studentD;
 	
 	@Autowired
-	private ControllerProp contProp;
-	
-	@Autowired
-	private ExceptionProp excepProp;
+	private MessageSource messageSource;
 	
 	@Value("${sql.script.create.student}")
 	private String sqlAddStudent;
@@ -101,7 +97,7 @@ class StudentCTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/studentC/getAll"))
 		.andExpect(status().isNoContent())
 		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-		.andExpect(jsonPath("$.message",is(contProp.getNoStudents())));
+		.andExpect(jsonPath("$.message",is("{contr.there-no-students}")));
 	}
 	
 	@Test
@@ -109,7 +105,7 @@ class StudentCTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/studentC/getById/{id}",100))//student with id don't exist
 		.andExpect(status().isBadRequest())
 		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-		.andExpect(jsonPath("$.message",is(contProp.getStudentIdNotFound())));
+		.andExpect(jsonPath("$.message",is("{contr.student-id-not-found}")));
 	}
 	
 	@Test
@@ -143,7 +139,7 @@ class StudentCTest {
 				.content(objectMapper.writeValueAsString(student)))
 				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.message",is(excepProp.getStudentEmailAlreadyUsed())));
+				.andExpect(jsonPath("$.message",is("{e.student-email-already-used}")));
 	}
 	
 	@Test
@@ -180,8 +176,8 @@ class StudentCTest {
 				.content(objectMapper.writeValueAsString(student)))
 				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.email",is("email mustn't be blank")))
-				.andExpect(jsonPath("$.lastname",is("lastname mustn't be blank")));
+				.andExpect(jsonPath("$.email",is(messageSource.getMessage("vali.person.email-not-blank", null,Locale.ENGLISH))))
+				.andExpect(jsonPath("$.lastname",is(messageSource.getMessage("vali.person.lastname-not-blank", null,Locale.ENGLISH))));
 	}
 	
 	

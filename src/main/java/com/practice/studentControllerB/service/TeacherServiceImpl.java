@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.practice.studentControllerB.config.prop.ExceptionProp;
 import com.practice.studentControllerB.dao.TeacherDao;
 import com.practice.studentControllerB.model.Teacher;
 
@@ -17,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 public class TeacherServiceImpl implements TeacherService{
 
 	private final TeacherDao teacherDao;
-	private final ExceptionProp excepProp;
 	
 	
 	@Override
@@ -30,8 +28,8 @@ public class TeacherServiceImpl implements TeacherService{
 
 	@Override
 	public int create(Teacher t) {
-		if(t == null) throw new IllegalArgumentException(excepProp.getTeacherNotNull());
-		if(teacherDao.getByEmail(t.getEmail()) != null) throw new IllegalArgumentException(excepProp.getTeacherEmailAlreadyUsed()); 
+		if(t == null) throw new IllegalArgumentException("{e.teacher-not-null}");
+		if(teacherDao.getByEmail(t.getEmail()) != null) throw new IllegalArgumentException("{e.teacher-email-already-used}"); 
 		return teacherDao.create(t);
 	}
 
@@ -43,14 +41,14 @@ public class TeacherServiceImpl implements TeacherService{
 
 	@Override
 	public int update(Teacher t) {
-		if(t == null) throw new IllegalArgumentException(excepProp.getTeacherNotNull());
-		if(teacherDao.getById(t.getId()) == null) throw new IllegalArgumentException(excepProp.getTeacherIdNotFound());
+		if(t == null) throw new IllegalArgumentException("{e.teacher-not-null}");
+		if(teacherDao.getById(t.getId()) == null) throw new IllegalArgumentException("{e.teacher-id-not-found}");
 		return teacherDao.update(t);
 	}
 
 	@Override
 	public int delete(Long id) {
-		if(teacherDao.getById(id) == null) throw new IllegalArgumentException(excepProp.getTeacherIdNotFound());
+		if(teacherDao.getById(id) == null) throw new IllegalArgumentException("{e.teacher-id-not-found}");
 		return teacherDao.delete(id);
 	}
 

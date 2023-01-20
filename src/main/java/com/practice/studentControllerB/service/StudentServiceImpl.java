@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.practice.studentControllerB.config.prop.ExceptionProp;
 import com.practice.studentControllerB.dao.StudentDao;
 import com.practice.studentControllerB.model.Student;
 
@@ -17,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 public class StudentServiceImpl implements StudentService{
 
 	private final StudentDao studentDao; 
-	private final ExceptionProp excepProp;
 	
 	@Override
 	@Transactional(readOnly = true)
@@ -29,8 +27,8 @@ public class StudentServiceImpl implements StudentService{
 
 	@Override
 	public int create(Student student) {
-		if(student == null) throw new IllegalArgumentException(excepProp.getStudentNotNull());
-		if(studentDao.getByEmail(student.getEmail()) != null) throw new IllegalArgumentException(excepProp.getStudentEmailAlreadyUsed());
+		if(student == null) throw new IllegalArgumentException("{e.student-not-null}");
+		if(studentDao.getByEmail(student.getEmail()) != null) throw new IllegalArgumentException("{e.student-email-already-used}");
 		return studentDao.create(student);
 	}
 
@@ -42,14 +40,14 @@ public class StudentServiceImpl implements StudentService{
 
 	@Override
 	public int update(Student student) {
-		if(student == null) throw new IllegalArgumentException(excepProp.getStudentNotNull());
-		if(studentDao.getById(student.getId()) == null) throw new IllegalArgumentException(excepProp.getStudentIdNotFound());
+		if(student == null) throw new IllegalArgumentException("{e.student-not-null}");
+		if(studentDao.getById(student.getId()) == null) throw new IllegalArgumentException("{e.student-id-not-found}");
 		return studentDao.update(student);
 	}
 
 	@Override
 	public int delete(Long id) {
-		if(studentDao.getById(id) == null) throw new IllegalArgumentException(excepProp.getStudentIdNotFound());
+		if(studentDao.getById(id) == null) throw new IllegalArgumentException("{e.student-id-not-found}");
 		return studentDao.delete(id);
 	}
 
