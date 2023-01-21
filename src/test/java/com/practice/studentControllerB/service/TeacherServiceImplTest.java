@@ -21,10 +21,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.practice.studentControllerB.dao.TeacherDao;
 import com.practice.studentControllerB.model.QualificationE;
 import com.practice.studentControllerB.model.Teacher;
+import com.practice.studentControllerB.utils.MessagesProp;
 
 @ExtendWith(MockitoExtension.class)
 class TeacherServiceImplTest {
 
+	@Mock private MessagesProp messagesProp;
 	@Mock private TeacherDao teacherDao;
 	@InjectMocks private TeacherServiceImpl teacherService;
 	List<Teacher> teachers;

@@ -97,7 +97,7 @@ class StudentCTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/studentC/getAll"))
 		.andExpect(status().isNoContent())
 		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("contr.there-no-students"))));
+		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("there-no-students"))));
 		
 	}
 	
@@ -106,7 +106,7 @@ class StudentCTest {
 		mockMvc.perform(MockMvcRequestBuilders.get("/studentC/getById/{id}",100))//student with id don't exist
 		.andExpect(status().isBadRequest())
 		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("e.student-id-not-found"))));
+		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("student-id-not-found"))));
 	}
 	
 	@Test
@@ -140,7 +140,7 @@ class StudentCTest {
 				.content(objectMapper.writeValueAsString(student)))
 				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.message",is(messagesProp.getMessage("e.student-email-already-used"))));
+				.andExpect(jsonPath("$.message",is(messagesProp.getMessage("student-email-already-used"))));
 	}
 	
 	@Test
@@ -198,7 +198,7 @@ class StudentCTest {
 				.content(objectMapper.writeValueAsString(student)))
 				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 				.andExpect(status().isBadRequest())
-				.andExpect(jsonPath("$.message",is(messagesProp.getMessage("e.student-id-not-found"))));
+				.andExpect(jsonPath("$.message",is(messagesProp.getMessage("student-id-not-found"))));
 	}
 	
 	@Test
@@ -231,7 +231,7 @@ class StudentCTest {
 	void deleteNoExistIdHttpStatusBadRequest() throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.delete("/studentC/delete/{id}",100))
 		.andExpect(status().isBadRequest())
-		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("e.student-id-not-found"))));
+		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("student-id-not-found"))));
 	}
 	
 	@Test
@@ -248,7 +248,7 @@ class StudentCTest {
 		assertNull(studentD.getByEmail(email));
 		mockMvc.perform(MockMvcRequestBuilders.get("/studentC/getByEmail/{email}",email))
 			.andExpect(status().isBadRequest())
-			.andExpect(jsonPath("$.message",is(messagesProp.getMessage("contr.student-email-not-found"))));
+			.andExpect(jsonPath("$.message",is(messagesProp.getMessage("student-email-not-found"))));
 	}
 	
 	@Test
@@ -266,7 +266,7 @@ class StudentCTest {
 		assertNull(studentD.getByfavoriteLanguage(language));
 		mockMvc.perform(MockMvcRequestBuilders.get("/studentC/getByFavLanguage/{favLanguage}",language))
 			.andExpect(status().isNoContent())
-			.andExpect(jsonPath("$.message",is(messagesProp.getMessage("contr.there-no-students"))));
+			.andExpect(jsonPath("$.message",is(messagesProp.getMessage("there-no-students"))));
 	}
 	
 	@AfterEach

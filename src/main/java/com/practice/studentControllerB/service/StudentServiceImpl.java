@@ -30,8 +30,8 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	@Transactional
 	public int create(Student student) {
-		if(student == null) throw new IllegalArgumentException(messagesProp.getMessage("e.student-not-null"));
-		if(studentDao.getByEmail(student.getEmail()) != null) throw new IllegalArgumentException(messagesProp.getMessage("e.student-email-already-used"));
+		if(student == null) throw new IllegalArgumentException(messagesProp.getMessage("student-not-null"));
+		if(studentDao.getByEmail(student.getEmail()) != null) throw new IllegalArgumentException(messagesProp.getMessage("student-email-already-used"));
 		return studentDao.create(student);
 	}
 
@@ -44,15 +44,15 @@ public class StudentServiceImpl implements StudentService{
 	@Override
 	@Transactional
 	public int update(Student student) {
-		if(student == null) throw new IllegalArgumentException("{e.student-not-null}");
-		if(studentDao.getById(student.getId()) == null) throw new IllegalArgumentException(messagesProp.getMessage("e.student-id-not-found"));
+		if(student == null) throw new IllegalArgumentException(messagesProp.getMessage("student-not-null"));
+		if(studentDao.getById(student.getId()) == null) throw new IllegalArgumentException(messagesProp.getMessage("student-id-not-found"));
 		return studentDao.update(student);
 	}
 
 	@Override
 	@Transactional
 	public int delete(Long id) {
-		if(studentDao.getById(id) == null) throw new IllegalArgumentException(messagesProp.getMessage("e.student-id-not-found"));
+		if(studentDao.getById(id) == null) throw new IllegalArgumentException(messagesProp.getMessage("student-id-not-found"));
 		return studentDao.delete(id);
 	}
 

@@ -39,7 +39,7 @@ public class StudentC {
 		List<Student> students = studentS.getAll();
 		if(students == null) {
 			return new ResponseEntity<>(
-					new Message(messagesProp.getMessage("contr.there-no-students"))
+					new Message(messagesProp.getMessage("there-no-students"))
 					,HttpStatus.NO_CONTENT);
 		}else {
 			return new ResponseEntity<>(students,HttpStatus.OK);
@@ -51,7 +51,7 @@ public class StudentC {
 		Student student = studentS.getById(id);
 		if(student == null) {
 			return new ResponseEntity<>(
-					new Message(messagesProp.getMessage("e.student-id-not-found"))
+					new Message(messagesProp.getMessage("student-id-not-found"))
 					,HttpStatus.BAD_REQUEST);
 		}else {
 			return new ResponseEntity<>(student,HttpStatus.OK);
@@ -72,7 +72,7 @@ public class StudentC {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}else {
 			return new ResponseEntity<>(
-					new Message(messagesProp.getMessage("contr.none-resource-updated"))
+					new Message(messagesProp.getMessage("none-resource-updated"))
 					,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -83,7 +83,7 @@ public class StudentC {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}else {
 			return new ResponseEntity<>(
-					new Message(messagesProp.getMessage("contr.none-resource-deleted"))
+					new Message(messagesProp.getMessage("none-resource-deleted"))
 					,HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -93,7 +93,7 @@ public class StudentC {
 		Student student = studentS.getByEmail(email);
 		if(student == null) {
 			return new ResponseEntity<>(
-					new Message(messagesProp.getMessage("contr.student-email-not-found"))
+					new Message(messagesProp.getMessage("student-email-not-found"))
 					,HttpStatus.BAD_REQUEST);
 		}else {
 			return new ResponseEntity<>(student,HttpStatus.OK);
@@ -105,18 +105,10 @@ public class StudentC {
 		List<Student> students = studentS.getByFavoriteLanguage(favLanguage);
 		if(students == null) {
 			return new ResponseEntity<>(
-					new Message(messagesProp.getMessage("contr.there-no-students"))
+					new Message(messagesProp.getMessage("there-no-students"))
 					,HttpStatus.NO_CONTENT);
 		}else {
 			return new ResponseEntity<>(students,HttpStatus.OK);
 		}
-	}
-	
-	
-	
-	
-	
-	
-	
-	
+	}	
 }
