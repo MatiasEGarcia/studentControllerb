@@ -2,9 +2,6 @@ package com.practice.studentControllerB.model;
 
 import java.util.Calendar;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.validation.annotation.Validated;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.practice.studentControllerB.serial.CalendarDeserializer;

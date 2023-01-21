@@ -17,7 +17,7 @@ public class InterMessages {
 		return messageSource;
 	}
 	
-	@Bean
+	@Bean //this is for validaton(@notnull , etc)
 	public LocalValidatorFactoryBean validator(MessageSource messageSource) {
 		LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
 		bean.setValidationMessageSource(messageSource);
