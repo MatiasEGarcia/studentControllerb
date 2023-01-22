@@ -51,6 +51,7 @@ public class CourseServiceImpl implements CourseService {
 		if(t == null) throw new IllegalArgumentException(messagesProp.getMessage("course-not-null"));
 		this.teacherNullExist(t);
 		if(courseDao.getById(t.getId()) == null) throw new IllegalArgumentException(messagesProp.getMessage("course-id-not-found"));
+		if(courseDao.getByTitle(t.getTitle()) != null) throw new IllegalArgumentException(messagesProp.getMessage("course-title-already-used"));
 		return courseDao.update(t);
 	}
 
@@ -99,7 +100,4 @@ public class CourseServiceImpl implements CourseService {
 		if(course.getTeacher() == null) throw new IllegalArgumentException(messagesProp.getMessage("teacher-not-null"));
 		if(teacherDao.getById(course.getTeacher().getId()) == null) throw new IllegalArgumentException(messagesProp.getMessage("teacher-id-not-found"));
 	}
-
-
-	
 }

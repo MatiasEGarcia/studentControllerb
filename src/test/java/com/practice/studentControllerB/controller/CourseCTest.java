@@ -21,8 +21,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.practice.studentControllerB.dao.CourseDao;
 import com.practice.studentControllerB.model.Course;
 import com.practice.studentControllerB.model.Shift;
 import com.practice.studentControllerB.model.Teacher;
@@ -44,6 +44,9 @@ class CourseCTest {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	@Autowired
+	private CourseDao courseD;
+	
 	@Autowired
 	private MessagesProp messagesProp;
 	
@@ -140,9 +143,129 @@ class CourseCTest {
 				.andExpect(jsonPath("$.message", is(messagesProp.getMessage("course-title-already-used"))));
 	}
 	
+	@Test
+	void updateHttpStatusOk() throws Exception{
+		course.setId(1L);
+		course.setTitle("Japanese");
+		teacher.setId(1L);
+		course.setTeacher(teacher);
+		course.setShift(Shift.MORNING.toString());
+		mockMvc.perform(MockMvcRequestBuilders.put("/courseC/update")
+				.contentType(APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(course)))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	void updateIdNoExistHttpStatusOk() throws Exception{
+		course.setId(100L); //there is not exist course with this id
+		course.setTitle("Japanese");
+		teacher.setId(1L);
+		course.setTeacher(teacher);
+		course.setShift(Shift.MORNING.toString());
+		mockMvc.perform(MockMvcRequestBuilders.put("/courseC/update")
+				.contentType(APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(course)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message", is(messagesProp.getMessage("course-id-not-found"))));
+	}
+	
+	@Test
+	void updateCourseTitleAlreadyUsedHttpStatusBadRequest() throws Exception{
+		course.setId(1L);
+		course.setTitle("Chinese"); //this title is alreadyUsed
+		teacher.setId(1L);
+		course.setTeacher(teacher);
+		course.setShift(Shift.MORNING.toString());
+		mockMvc.perform(MockMvcRequestBuilders.put("/courseC/update")
+				.contentType(APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(course)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message", is(messagesProp.getMessage("course-title-already-used"))));
+	}
+	
+	@Test
+	void updateCourseTeacherIdNoExistHttpStatusBadRequest() throws Exception{
+		course.setId(1L);
+		course.setTitle("Japanese");
+		teacher.setId(100L); //there is not exist teacher with this id
+		course.setTeacher(teacher);
+		course.setShift(Shift.MORNING.toString());
+		mockMvc.perform(MockMvcRequestBuilders.put("/courseC/update")
+				.contentType(APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(course)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message", is(messagesProp.getMessage("teacher-id-not-found"))));
+	}
+	
+	@Test
+	void deleteHttpStatusOk() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.delete("/courseC/delete/{id}",1))
+			.andExpect(status().isOk());
+	}
+	
+	@Test
+	void deleteIdNoExistHttpStatusBadRequest() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.delete("/courseC/delete/{id}",100))
+			.andExpect(status().isBadRequest())
+			.andExpect(jsonPath("$.message", is(messagesProp.getMessage("course-id-not-found"))));
+	}
+	
+	@Test
+	void getByTitleHttpStatusOk()throws Exception{
+		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getByTitle/{title}","Chinese"))
+		.andExpect(status().isOk());
+	}
+	
+	@Test
+	void getByTitleNoExistHttpStatusNoContent()throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getByTitle/{title}","Japanese"))
+		.andExpect(status().isNoContent())
+		.andExpect(jsonPath("$.message", is(messagesProp.getMessage("course-title-not-found"))));
+	}
+	
+	@Test
+	void getByShiftHttpStatusOk() throws Exception{
+		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getByShift/{shift}","morning"))
+		.andExpect(status().isOk());
+	}
+	
+	@Test
+	void getByShiftNoExistHttpStatusBadRequest() throws Exception{
+		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getByShift/{shift}","morn"))
+		.andExpect(status().isBadRequest())
+		.andExpect(jsonPath("$.message", is(messagesProp.getMessage("shift-not-found"))));
+	}
+	
+	@Test
+	void getByShiftHttpStatusNoContent() throws Exception{
+		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getByShift/{shift}","night"))
+		.andExpect(status().isNoContent())
+		.andExpect(jsonPath("$.message", is(messagesProp.getMessage("there-no-courses"))));
+	}
 	
 	
 	
+	@Test
+	void getByTeacherIdHttpStatusOk() throws Exception{
+		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getByTeacherId/{id}",1))
+		.andExpect(status().isOk());
+	}
+	
+	@Test
+	void getByTeacherIdNoExistHttpStatusBadRequest() throws Exception{
+		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getByTeacherId/{id}",100))
+		.andExpect(status().isBadRequest())
+		.andExpect(jsonPath("$.message", is(messagesProp.getMessage("teacher-id-not-found"))));
+	}
+	
+	@Test
+	void getByTeacherIdHttpStatusNoContent() throws Exception{
+		courseD.delete(1L);
+		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getByTeacherId/{id}",1))
+		.andExpect(status().isNoContent())
+		.andExpect(jsonPath("$.message", is(messagesProp.getMessage("there-no-courses"))));
+	}
 	
 	@AfterEach
 	void setUpAfterTransaction() {
