@@ -65,6 +65,7 @@ class CourseServiceImplTest {
 	@Test
 	void createArgumentNullThrow() {
 		assertThrows(IllegalArgumentException.class, () -> {courseService.create(null);});
+		verify(teacherDao,never()).getById(null);
 		verify(courseDao,never()).getByTitle(null);
 		verify(courseDao,never()).create(null);
 	}
@@ -73,6 +74,16 @@ class CourseServiceImplTest {
 	void createWithTeacherNullThrow() {
 		course.setTeacher(null);
 		assertThrows(IllegalArgumentException.class, () -> {courseService.create(course);});
+		verify(teacherDao,never()).getById(null);
+		verify(courseDao,never()).getByTitle(course.getTitle());
+		verify(courseDao,never()).create(course);
+	}
+	
+	@Test
+	void createWithTeacherIdNoExistThrow() {
+		course.getTeacher().setId(100L);
+		assertThrows(IllegalArgumentException.class, () -> {courseService.create(course);});
+		verify(teacherDao).getById(course.getTeacher().getId());
 		verify(courseDao,never()).getByTitle(course.getTitle());
 		verify(courseDao,never()).create(course);
 	}
@@ -80,7 +91,9 @@ class CourseServiceImplTest {
 	@Test
 	void createWithTitleAlreadyUsedThrow() {
 		when(courseDao.getByTitle(course.getTitle())).thenReturn(course);
+		when(teacherDao.getById(course.getTeacher().getId())).thenReturn(teacher);
 		assertThrows(IllegalArgumentException.class, () -> {courseService.create(course);});
+		verify(teacherDao).getById(course.getTeacher().getId());
 		verify(courseDao).getByTitle(course.getTitle());
 		verify(courseDao,never()).create(null);
 	}
@@ -88,8 +101,10 @@ class CourseServiceImplTest {
 	@Test
 	void createTitleNotNullAndTitleAvailable() {
 		when(courseDao.getByTitle(course.getTitle())).thenReturn(null);
+		when(teacherDao.getById(course.getTeacher().getId())).thenReturn(teacher);
 		when(courseDao.create(course)).thenReturn(1);
 		assertEquals(1, courseService.create(course));
+		verify(teacherDao).getById(course.getTeacher().getId());
 		verify(courseDao).getByTitle(course.getTitle());
 		verify(courseDao).create(course);
 	}
@@ -115,17 +130,21 @@ class CourseServiceImplTest {
 	
 	@Test
 	void updateIdNoExistThrow() {
+		when(teacherDao.getById(course.getTeacher().getId())).thenReturn(teacher);
 		when(courseDao.getById(course.getId())).thenReturn(null);
 		assertThrows(IllegalArgumentException.class, () -> {courseService.update(course);});
+		verify(teacherDao).getById(course.getTeacher().getId());
 		verify(courseDao).getById(course.getId());
 		verify(courseDao,never()).update(course);
 	}
 	
 	@Test
 	void updateIdExistReturn1() {
+		when(teacherDao.getById(course.getTeacher().getId())).thenReturn(teacher);
 		when(courseDao.getById(course.getId())).thenReturn(course);
 		when(courseDao.update(course)).thenReturn(1);
 		assertEquals(1, courseService.update(course));
+		verify(teacherDao).getById(course.getTeacher().getId());
 		verify(courseDao).getById(course.getId());
 		verify(courseDao).update(course);
 	}

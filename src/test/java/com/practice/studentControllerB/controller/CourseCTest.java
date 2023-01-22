@@ -2,12 +2,9 @@ package com.practice.studentControllerB.controller;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -24,8 +21,10 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.practice.studentControllerB.model.Course;
+import com.practice.studentControllerB.model.Shift;
 import com.practice.studentControllerB.model.Teacher;
 import com.practice.studentControllerB.utils.MessagesProp;
 
@@ -104,6 +103,45 @@ class CourseCTest {
 		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
 		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("there-no-courses"))));
 	}
+	
+	@Test
+	void createHttpStatusOk() throws Exception {
+		course.setTitle("Japanese");
+		teacher.setId(1L);
+		course.setTeacher(teacher);
+		course.setShift(Shift.MORNING.toString());
+		mockMvc.perform(MockMvcRequestBuilders.post("/courseC/create")
+				.contentType(APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(course)))
+				.andExpect(status().isOk());
+	}
+	
+	@Test
+	void createCourseFieldsNullHttpStatusBadRequest() throws Exception {
+		mockMvc.perform(MockMvcRequestBuilders.post("/courseC/create")
+				.contentType(APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(course)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.title", is(messagesProp.getMessage("vali.course-title-not-blank"))))
+				.andExpect(jsonPath("$.shift", is(messagesProp.getMessage("vali.course-shift-not-blank"))))
+				.andExpect(jsonPath("$.teacher", is(messagesProp.getMessage("vali.course-teacher-not-null"))));
+	}
+	
+	@Test
+	void createCourseTitleAlreadyUsedHttpStatusBadRequest() throws Exception {
+		course.setTitle("Chinese");
+		teacher.setId(1L);
+		course.setTeacher(teacher);
+		course.setShift(Shift.MORNING.toString());
+		mockMvc.perform(MockMvcRequestBuilders.post("/courseC/create")
+				.contentType(APPLICATION_JSON_UTF8)
+				.content(objectMapper.writeValueAsString(course)))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.message", is(messagesProp.getMessage("course-title-already-used"))));
+	}
+	
+	
+	
 	
 	
 	@AfterEach

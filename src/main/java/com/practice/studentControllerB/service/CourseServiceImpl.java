@@ -34,7 +34,7 @@ public class CourseServiceImpl implements CourseService {
 	@Transactional
 	public int create(Course t) {
 		if(t == null) throw new IllegalArgumentException(messagesProp.getMessage("course-not-null"));
-		if(t.getTeacher() == null) throw new IllegalArgumentException(messagesProp.getMessage("teacher-not-null"));
+		this.teacherNullExist(t);
 		if(courseDao.getByTitle(t.getTitle()) != null) throw new IllegalArgumentException(messagesProp.getMessage("course-title-already-used"));
 		return courseDao.create(t);
 	}
@@ -49,6 +49,7 @@ public class CourseServiceImpl implements CourseService {
 	@Transactional
 	public int update(Course t) {
 		if(t == null) throw new IllegalArgumentException(messagesProp.getMessage("course-not-null"));
+		this.teacherNullExist(t);
 		if(courseDao.getById(t.getId()) == null) throw new IllegalArgumentException(messagesProp.getMessage("course-id-not-found"));
 		return courseDao.update(t);
 	}
@@ -89,6 +90,14 @@ public class CourseServiceImpl implements CourseService {
 	public Course getByTeacherId(Long teacher) {
 		if(teacherDao.getById(teacher) == null) throw new IllegalArgumentException(messagesProp.getMessage("teacher-id-not-found"));
 		return courseDao.getByTeacherId(teacher);
+	}
+
+	//This method is to check if teacher is not null and if exist, so you can save your course with this teacher without problem
+	@Override
+	@Transactional(readOnly = true)
+	public void teacherNullExist(Course course) {
+		if(course.getTeacher() == null) throw new IllegalArgumentException(messagesProp.getMessage("teacher-not-null"));
+		if(teacherDao.getById(course.getTeacher().getId()) == null) throw new IllegalArgumentException(messagesProp.getMessage("teacher-id-not-found"));
 	}
 
 

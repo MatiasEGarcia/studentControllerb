@@ -11,4 +11,6 @@ public interface CourseService extends GenericService<Course> {
 	List<Course> getByShift(String shift);
 
 	Course getByTeacherId(Long teacher);
+	
+	void teacherNullExist(Course course);
 }
