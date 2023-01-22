@@ -45,6 +45,7 @@ class CourseServiceImplTest {
 		course.setShift(Shift.MORNING.toString());
 		teacher = new Teacher();
 		teacher.setId(1L);
+		course.setTeacher(teacher);
 	}
 	
 	@Test
@@ -66,6 +67,14 @@ class CourseServiceImplTest {
 		assertThrows(IllegalArgumentException.class, () -> {courseService.create(null);});
 		verify(courseDao,never()).getByTitle(null);
 		verify(courseDao,never()).create(null);
+	}
+	
+	@Test
+	void createWithTeacherNullThrow() {
+		course.setTeacher(null);
+		assertThrows(IllegalArgumentException.class, () -> {courseService.create(course);});
+		verify(courseDao,never()).getByTitle(course.getTitle());
+		verify(courseDao,never()).create(course);
 	}
 	
 	@Test

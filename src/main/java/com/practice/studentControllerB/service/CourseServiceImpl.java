@@ -34,6 +34,7 @@ public class CourseServiceImpl implements CourseService {
 	@Transactional
 	public int create(Course t) {
 		if(t == null) throw new IllegalArgumentException(messagesProp.getMessage("course-not-null"));
+		if(t.getTeacher() == null) throw new IllegalArgumentException(messagesProp.getMessage("teacher-not-null"));
 		if(courseDao.getByTitle(t.getTitle()) != null) throw new IllegalArgumentException(messagesProp.getMessage("course-title-already-used"));
 		return courseDao.create(t);
 	}
