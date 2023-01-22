@@ -10,6 +10,7 @@ import com.practice.studentControllerB.dao.CourseDao;
 import com.practice.studentControllerB.dao.TeacherDao;
 import com.practice.studentControllerB.model.Course;
 import com.practice.studentControllerB.model.Shift;
+import com.practice.studentControllerB.utils.MessagesProp;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class CourseServiceImpl implements CourseService {
 	
+	private final MessagesProp messagesProp;
 	private final CourseDao courseDao;
 	private final TeacherDao teacherDao;
 	
@@ -31,8 +33,8 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	@Transactional
 	public int create(Course t) {
-		if(t == null) throw new IllegalArgumentException("{e.course-not-null}");
-		if(courseDao.getByTitle(t.getTitle()) != null) throw new IllegalArgumentException("{e.course-title-already-used}");
+		if(t == null) throw new IllegalArgumentException(messagesProp.getMessage("course-not-null"));
+		if(courseDao.getByTitle(t.getTitle()) != null) throw new IllegalArgumentException(messagesProp.getMessage("course-title-already-used"));
 		return courseDao.create(t);
 	}
 
@@ -45,15 +47,15 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	@Transactional
 	public int update(Course t) {
-		if(t == null) throw new IllegalArgumentException("{e.course-not-null}");
-		if(courseDao.getById(t.getId()) == null) throw new IllegalArgumentException("{e.course-id-not-found}");
+		if(t == null) throw new IllegalArgumentException(messagesProp.getMessage("course-not-null"));
+		if(courseDao.getById(t.getId()) == null) throw new IllegalArgumentException(messagesProp.getMessage("course-id-not-found"));
 		return courseDao.update(t);
 	}
 
 	@Override
 	@Transactional
 	public int delete(Long id) {
-		if(courseDao.getById(id) == null) throw new IllegalArgumentException("{e.course-id-not-found}");
+		if(courseDao.getById(id) == null) throw new IllegalArgumentException(messagesProp.getMessage("course-id-not-found"));
 		return courseDao.delete(id);
 	}
 
@@ -75,7 +77,7 @@ public class CourseServiceImpl implements CourseService {
 				break;
 			}
 		}
-		if(flag == false) throw new IllegalArgumentException("{e.shift-not-found}");
+		if(flag == false) throw new IllegalArgumentException(messagesProp.getMessage("shift-not-found"));
 		courses = courseDao.getByShift(shift.toUpperCase());
 		if(courses != null) return Collections.unmodifiableList(courses);
 		return null;
@@ -84,7 +86,7 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	@Transactional(readOnly = true)
 	public Course getByTeacherId(Long teacher) {
-		if(teacherDao.getById(teacher) == null) throw new IllegalArgumentException("{e.teacher-id-not-found}");
+		if(teacherDao.getById(teacher) == null) throw new IllegalArgumentException(messagesProp.getMessage("teacher-id-not-found"));
 		return courseDao.getByTeacherId(teacher);
 	}
 

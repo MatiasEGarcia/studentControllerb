@@ -23,10 +23,12 @@ import com.practice.studentControllerB.dao.TeacherDao;
 import com.practice.studentControllerB.model.Course;
 import com.practice.studentControllerB.model.Shift;
 import com.practice.studentControllerB.model.Teacher;
+import com.practice.studentControllerB.utils.MessagesProp;
 
 @ExtendWith(MockitoExtension.class)
 class CourseServiceImplTest {
 
+	@Mock private MessagesProp messagesProp;
 	@Mock private CourseDao courseDao;
 	@Mock private TeacherDao teacherDao;
 	@InjectMocks private CourseServiceImpl courseService;
