@@ -9,4 +9,6 @@ public interface QualificationService extends GenericService<Qualification> {
 	List<Qualification> getByCourseId(Long Course);
 
 	List<Qualification> getByStudentId(Long student);
+	
+	void studentAndCourseExist(Qualification qualification);
 }
