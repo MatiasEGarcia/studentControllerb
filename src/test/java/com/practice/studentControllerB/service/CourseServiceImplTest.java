@@ -135,17 +135,20 @@ class CourseServiceImplTest {
 		assertThrows(IllegalArgumentException.class, () -> {courseService.update(course);});
 		verify(teacherDao).getById(course.getTeacher().getId());
 		verify(courseDao).getById(course.getId());
+		verify(courseDao,never()).getByTitle(course.getTitle());
 		verify(courseDao,never()).update(course);
 	}
 	
 	@Test
 	void updateIdExistReturn1() {
 		when(teacherDao.getById(course.getTeacher().getId())).thenReturn(teacher);
+		when(courseDao.getByTitle(course.getTitle())).thenReturn(null);
 		when(courseDao.getById(course.getId())).thenReturn(course);
 		when(courseDao.update(course)).thenReturn(1);
 		assertEquals(1, courseService.update(course));
 		verify(teacherDao).getById(course.getTeacher().getId());
 		verify(courseDao).getById(course.getId());
+		verify(courseDao).getByTitle(course.getTitle());
 		verify(courseDao).update(course);
 	}
 	
