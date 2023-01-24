@@ -1,5 +1,6 @@
 package com.practice.studentControllerB.service;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -226,5 +227,26 @@ class CourseServiceImplTest {
 		assertNotNull(courseService.getByTeacherId(teacher.getId()));
 		verify(teacherDao).getById(teacher.getId());
 		verify(courseDao).getByTeacherId(teacher.getId());
+	}
+	
+	@Test
+	void teacherNullExistTeacherNull() {
+		course.setTeacher(null);
+		assertThrows(IllegalArgumentException.class, () -> {courseService.teacherNullExist(course);});
+		verify(teacherDao,never()).getById(null);
+	}
+	
+	@Test
+	void teacherNullExistTeacherNotNullExist() {
+		when(teacherDao.getById(teacher.getId())).thenReturn(teacher);
+		assertDoesNotThrow(() -> {courseService.teacherNullExist(course);});
+		verify(teacherDao).getById(teacher.getId());
+	}
+	
+	@Test
+	void teacherNullExistTeacherNotNullNoExist() {
+		when(teacherDao.getById(teacher.getId())).thenReturn(null);
+		assertThrows(IllegalArgumentException.class,() -> {courseService.teacherNullExist(course);});
+		verify(teacherDao).getById(teacher.getId());
 	}
 }
