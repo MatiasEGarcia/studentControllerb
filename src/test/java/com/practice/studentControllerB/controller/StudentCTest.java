@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 import java.util.Calendar;
 
@@ -22,6 +23,7 @@ import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.reactive.server.HeaderAssertions;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -96,8 +98,7 @@ class StudentCTest {
 		jdbc.update("DELETE FROM students"); //now getAll will return null
 		mockMvc.perform(MockMvcRequestBuilders.get("/studentC/getAll"))
 		.andExpect(status().isNoContent())
-		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("there-no-students"))));
+		.andExpect(header().string("Info-Header", messagesProp.getMessage("there-no-students")));
 		
 	}
 	
@@ -266,7 +267,7 @@ class StudentCTest {
 		assertNull(studentD.getByfavoriteLanguage(language));
 		mockMvc.perform(MockMvcRequestBuilders.get("/studentC/getByFavLanguage/{favLanguage}",language))
 			.andExpect(status().isNoContent())
-			.andExpect(jsonPath("$.message",is(messagesProp.getMessage("there-no-students"))));
+			.andExpect(header().string("Info-Header", messagesProp.getMessage("there-no-students")));
 	}
 	
 	@AfterEach

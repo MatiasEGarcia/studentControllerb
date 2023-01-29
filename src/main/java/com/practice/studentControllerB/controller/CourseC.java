@@ -3,6 +3,7 @@ package com.practice.studentControllerB.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,14 +36,15 @@ public class CourseC {
 	
 	@GetMapping(value="/getAll")
 	public ResponseEntity<?> getAll(){
+		HttpHeaders headers;
 		List<Course> courses = courseS.getAll();
 		if(courses == null) {
-			return new ResponseEntity<>(
-					new Message(messagesProp.getMessage("there-no-courses"))
-					,HttpStatus.NO_CONTENT);
-		}else {
-			return new ResponseEntity<>(courses,HttpStatus.OK);
+			headers = new HttpHeaders();
+			headers.add("Info-Header", messagesProp.getMessage("there-no-courses"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
 		}
+			return new ResponseEntity<>(courses,HttpStatus.OK);
+		
 	}
 	
 	@PostMapping(value="/create")
@@ -80,22 +82,37 @@ public class CourseC {
 	
 	@GetMapping(value="/getByTitle/{title}")
 	public ResponseEntity<?> getByTitle(@PathVariable("title") String title){
+		HttpHeaders headers;
 		Course course = courseS.getByTitle(title);
-		if(course == null) return new ResponseEntity<>(new Message(messagesProp.getMessage("course-title-not-found")),HttpStatus.NO_CONTENT);
+		if(course == null) {
+			headers = new HttpHeaders();
+			headers.add("Info-Header", messagesProp.getMessage("course-title-not-found"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
+		}
 		return new ResponseEntity<>(course,HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/getByShift/{shift}")
 	public ResponseEntity<?> getByShift(@PathVariable("shift") String shift){
+		HttpHeaders headers;
 		List<Course> courses = courseS.getByShift(shift);
-		if(courses == null) return new ResponseEntity<>(new Message(messagesProp.getMessage("there-no-courses")),HttpStatus.NO_CONTENT);
+		if(courses == null) {
+			headers = new HttpHeaders();
+			headers.add("Info-Header", messagesProp.getMessage("there-no-courses"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
+		}
 		return new ResponseEntity<>(courses,HttpStatus.OK);
 	}
 	
 	@GetMapping(value="/getByTeacherId/{id}")
 	public ResponseEntity<?> getByTeacherId(@PathVariable("id") Long id){
+		HttpHeaders headers;
 		Course course = courseS.getByTeacherId(id);
-		if(course == null) return new ResponseEntity<>(new Message(messagesProp.getMessage("there-no-courses")),HttpStatus.NO_CONTENT);
+		if(course == null) {
+			headers = new HttpHeaders();
+			headers.add("Info-Header", messagesProp.getMessage("there-no-courses"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
+		}
 		return new ResponseEntity<>(course,HttpStatus.OK);
 	}
 }

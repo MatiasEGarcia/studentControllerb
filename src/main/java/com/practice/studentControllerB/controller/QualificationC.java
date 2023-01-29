@@ -3,6 +3,7 @@ package com.practice.studentControllerB.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,11 +36,12 @@ public class QualificationC {
 	
 	@GetMapping(value="/getAll")
 	public ResponseEntity<?> getAll(){
+		HttpHeaders headers;
 		List<Qualification> qualifications = qualificationS.getAll();
 		if(qualifications == null) {
-			return new ResponseEntity<>(
-					new Message(messagesProp.getMessage("there-no-qualifications"))
-					,HttpStatus.NO_CONTENT);
+			headers = new HttpHeaders();
+			headers.add("Info-Header", messagesProp.getMessage("there-no-qualifications"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<>(qualifications, HttpStatus.OK);
 	}
@@ -87,19 +89,26 @@ public class QualificationC {
 	
 	@GetMapping(value="/getByCourseId/{id}")
 	public ResponseEntity<?> getByCourseId(@PathVariable("id") Long id){
+		HttpHeaders headers;
 		List<Qualification> qualifications = qualificationS.getByCourseId(id);
-		if(qualifications != null) {
-			return new ResponseEntity<>(qualifications,HttpStatus.OK);
+		if(qualifications == null) {
+			headers = new HttpHeaders();
+			headers.add("Info-Header", messagesProp.getMessage("there-no-qualifications"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity<>(new Message(messagesProp.getMessage("there-no-qualifications")),HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(qualifications,HttpStatus.OK);
+		
 	}
 	
 	@GetMapping(value="/getByStudentId/{id}")
 	public ResponseEntity<?> getByStudentId(@PathVariable("id") Long id){
+		HttpHeaders headers;
 		List<Qualification> qualifications = qualificationS.getByStudentId(id);
-		if(qualifications != null) {
-			return new ResponseEntity<>(qualifications,HttpStatus.OK);
+		if(qualifications == null) {
+			headers = new HttpHeaders();
+			headers.add("Info-header", messagesProp.getMessage("there-no-qualifications"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
 		}
-		return new ResponseEntity<>(new Message(messagesProp.getMessage("there-no-qualifications")),HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(qualifications,HttpStatus.OK);
 	}
 }

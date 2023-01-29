@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -111,9 +112,9 @@ class QualificationCTest {
 	@Test
 	void getAllHttpStatusNoContent() throws Exception {
 		jdbc.update("DELETE FROM qualifications");
-		mockMvc.perform(MockMvcRequestBuilders.get("/qualificationC/getAll")).andExpect(status().isNoContent())
-				.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.message", is(messagesProp.getMessage("there-no-qualifications"))));
+		mockMvc.perform(MockMvcRequestBuilders.get("/qualificationC/getAll"))
+				.andExpect(status().isNoContent())
+				.andExpect(header().string("Info-Header", messagesProp.getMessage("there-no-qualifications")));
 	}
 
 	@Test
@@ -243,7 +244,7 @@ class QualificationCTest {
 		jdbc.update("DELETE FROM qualifications");
 		mockMvc.perform(MockMvcRequestBuilders.get("/qualificationC/getByCourseId/{id}",1))
 		.andExpect(status().isNoContent())
-		.andExpect(jsonPath("$.message", is(messagesProp.getMessage("there-no-qualifications"))));
+		.andExpect(header().string("Info-Header", messagesProp.getMessage("there-no-qualifications")));
 	}
 	
 	@Test
@@ -265,7 +266,7 @@ class QualificationCTest {
 		jdbc.update("DELETE FROM qualifications");
 		mockMvc.perform(MockMvcRequestBuilders.get("/qualificationC/getByStudentId/{id}",1))
 		.andExpect(status().isNoContent())
-		.andExpect(jsonPath("$.message", is(messagesProp.getMessage("there-no-qualifications"))));
+		.andExpect(header().string("Info-Header", messagesProp.getMessage("there-no-qualifications")));
 	}
 	
 	@Test

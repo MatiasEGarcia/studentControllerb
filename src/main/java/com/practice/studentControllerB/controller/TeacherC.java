@@ -3,6 +3,7 @@ package com.practice.studentControllerB.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -35,10 +36,12 @@ public class TeacherC {
 	
 	@GetMapping(value="/getAll")
 	public ResponseEntity<?> getAll(){
+		HttpHeaders headers;
 		List<Teacher> teachers = teacherS.getAll();
 		if(teachers == null) {
-			return new ResponseEntity<>(new Message(messagesProp.getMessage("there-no-teachers"))
-					,HttpStatus.NO_CONTENT);
+			headers = new HttpHeaders();
+			headers.add("Info-header", messagesProp.getMessage("there-no-teachers"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
 		}else {
 			return new ResponseEntity<>(teachers,HttpStatus.OK);
 		}
@@ -89,10 +92,12 @@ public class TeacherC {
 	
 	@GetMapping(value="/getByQualification/{qualific}")
 	public ResponseEntity<?> getByQualification(@PathVariable("qualific") String qualification){
+		HttpHeaders headers;
 		List<Teacher> teachers = teacherS.getByQualification(qualification);
 		if(teachers == null) {
-			return new ResponseEntity<>(new Message(messagesProp.getMessage("there-no-teachers"))
-					,HttpStatus.NO_CONTENT);
+			headers = new HttpHeaders();
+			headers.add("Info-Header", messagesProp.getMessage("there-no-teachers"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
 		}else {
 			return new ResponseEntity<>(teachers,HttpStatus.OK);
 		}
@@ -100,10 +105,12 @@ public class TeacherC {
 	
 	@GetMapping(value="/getByNationality/{nationality}")
 	public ResponseEntity<?> getByNatinality(@PathVariable("nationality") String nationality){
+		HttpHeaders headers;
 		List<Teacher> teachers = teacherS.getByNationality(nationality);
 		if(teachers == null) {
-			return new ResponseEntity<>(new Message(messagesProp.getMessage("there-no-teachers"))
-					,HttpStatus.NO_CONTENT);
+			headers = new HttpHeaders();
+			headers.add("Info-Header", messagesProp.getMessage("there-no-teachers"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
 		}else {
 			return new ResponseEntity<>(teachers,HttpStatus.OK);
 		}

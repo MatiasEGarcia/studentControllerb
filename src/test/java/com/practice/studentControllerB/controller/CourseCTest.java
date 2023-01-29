@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -103,8 +105,7 @@ class CourseCTest {
 		jdbc.update("DELETE FROM courses");
 		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getAll"))
 		.andExpect(status().isNoContent())
-		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("there-no-courses"))));
+		.andExpect(header().string("Info-header", messagesProp.getMessage("there-no-courses")));
 	}
 	
 	@Test
@@ -221,7 +222,7 @@ class CourseCTest {
 	void getByTitleNoExistHttpStatusNoContent()throws Exception {
 		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getByTitle/{title}","Japanese"))
 		.andExpect(status().isNoContent())
-		.andExpect(jsonPath("$.message", is(messagesProp.getMessage("course-title-not-found"))));
+		.andExpect(header().string("Info-header", messagesProp.getMessage("course-title-not-found")));
 	}
 	
 	@Test
@@ -241,7 +242,7 @@ class CourseCTest {
 	void getByShiftHttpStatusNoContent() throws Exception{
 		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getByShift/{shift}","night"))
 		.andExpect(status().isNoContent())
-		.andExpect(jsonPath("$.message", is(messagesProp.getMessage("there-no-courses"))));
+		.andExpect(header().string("Info-header", messagesProp.getMessage("there-no-courses")));
 	}
 	
 	
@@ -264,7 +265,7 @@ class CourseCTest {
 		courseD.delete(1L);
 		mockMvc.perform(MockMvcRequestBuilders.get("/courseC/getByTeacherId/{id}",1))
 		.andExpect(status().isNoContent())
-		.andExpect(jsonPath("$.message", is(messagesProp.getMessage("there-no-courses"))));
+		.andExpect(header().string("Info-header", messagesProp.getMessage("there-no-courses")));
 	}
 	
 	@AfterEach

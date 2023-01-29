@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -36,11 +37,12 @@ public class StudentC {
 	
 	@GetMapping(value="/getAll")
 	public ResponseEntity<?> getAll(){
+		HttpHeaders headers;
 		List<Student> students = studentS.getAll();
 		if(students == null) {
-			return new ResponseEntity<>(
-					new Message(messagesProp.getMessage("there-no-students"))
-					,HttpStatus.NO_CONTENT);
+			headers = new HttpHeaders();
+			headers.add("Info-Header", messagesProp.getMessage("there-no-students"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
 		}else {
 			return new ResponseEntity<>(students,HttpStatus.OK);
 		}
@@ -102,11 +104,12 @@ public class StudentC {
 	
 	@GetMapping(value="/getByFavLanguage/{favLanguage}")
 	public ResponseEntity<?> getByfavLanguage(@PathVariable("favLanguage") String favLanguage){
+		HttpHeaders headers;
 		List<Student> students = studentS.getByFavoriteLanguage(favLanguage);
 		if(students == null) {
-			return new ResponseEntity<>(
-					new Message(messagesProp.getMessage("there-no-students"))
-					,HttpStatus.NO_CONTENT);
+			headers = new HttpHeaders();
+			headers.add("Info-Header", messagesProp.getMessage("there-no-students"));
+			return new ResponseEntity<>(headers,HttpStatus.NO_CONTENT);
 		}else {
 			return new ResponseEntity<>(students,HttpStatus.OK);
 		}

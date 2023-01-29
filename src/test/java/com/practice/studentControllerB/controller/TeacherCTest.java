@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -90,8 +91,7 @@ class TeacherCTest {
 		jdbc.update("DELETE FROM teachers");
 		mockMvc.perform(MockMvcRequestBuilders.get("/teacherC/getAll"))
 		.andExpect(status().isNoContent())
-		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("there-no-teachers"))));
+		.andExpect(header().string("Info-Header", messagesProp.getMessage("there-no-teachers")));
 	}
 	
 	@Test
@@ -229,8 +229,7 @@ class TeacherCTest {
 		String qualific = QualificationE.DOCTORATE.toString();
 		mockMvc.perform(MockMvcRequestBuilders.get("/teacherC/getByQualification/{qualific}",qualific))
 		.andExpect(status().isNoContent())
-		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("there-no-teachers"))));
+		.andExpect(header().string("Info-Header", messagesProp.getMessage("there-no-teachers")));
 	}
 	
 	@Test
@@ -256,8 +255,7 @@ class TeacherCTest {
 		String nationality = "Japanese";
 		mockMvc.perform(MockMvcRequestBuilders.get("/teacherC/getByNationality/{nationality}",nationality))
 		.andExpect(status().isNoContent())
-		.andExpect(content().contentType(APPLICATION_JSON_UTF8))
-		.andExpect(jsonPath("$.message",is(messagesProp.getMessage("there-no-teachers"))));
+		.andExpect(header().string("Info-Header", messagesProp.getMessage("there-no-teachers")));
 	}
 	
 	
